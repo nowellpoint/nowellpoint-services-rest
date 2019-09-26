@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateConnectionResult {
-	private Connection connection;
+public class CreateOrganizationResult {
+	private Organization connection;
 }

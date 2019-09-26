@@ -3,7 +3,7 @@ package com.nowellpoint.api;
 //import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
-import com.nowellpoint.api.model.ConnectionRequest;
+import com.nowellpoint.api.model.OrganizationRequest;
 import com.nowellpoint.http.HttpResponse;
 import com.nowellpoint.http.MediaType;
 import com.nowellpoint.http.RestResource;

@@ -1,8 +1,0 @@
-com/nowellpoint/api/ConnectionResource.class
-com/nowellpoint/api/model/Connection.class
-com/nowellpoint/api/model/ConnectionRequest$ConnectionRequestBuilder.class
-com/nowellpoint/api/model/CreateConnectionResult.class
-com/nowellpoint/api/model/CreateConnectionResult$CreateConnectionResultBuilder.class
-com/nowellpoint/api/model/Connection$ConnectionBuilder.class
-com/nowellpoint/api/model/ConnectionRequest.class
-com/nowellpoint/api/service/ConnectionService.class

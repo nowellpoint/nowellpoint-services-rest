@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Connection {
+public class Organization {
 	private String id;
 	private String username;
 	private String organizationId;
+	private String instanceUrl;
 }
