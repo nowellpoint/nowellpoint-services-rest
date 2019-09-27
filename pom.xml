@@ -11,7 +11,10 @@
 		<surefire-plugin.version>2.22.0</surefire-plugin.version>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<quarkus.version>0.22.0</quarkus.version>
+		<quarkus.version>0.23.1</quarkus.version>
+		<aws.version>1.11.628</aws.version>
+		<lombok.version>1.18.10</lombok.version>
+		<jjwt.version>0.9.1</jjwt.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -42,8 +45,18 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.10</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-cognitoidp</artifactId>
+			<version>${aws.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jjwt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nowellpoint</groupId>

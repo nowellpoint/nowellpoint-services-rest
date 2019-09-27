@@ -4,5 +4,6 @@
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/model/CreateOrganizationResult.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/model/Organization.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/util/JsonbUtil.java
+/Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/service/AbstractService.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/OrganizationResource.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/error/ErrorResponse.java

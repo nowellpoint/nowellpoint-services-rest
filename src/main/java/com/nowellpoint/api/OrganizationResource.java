@@ -14,7 +14,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.nowellpoint.api.model.Organization;
 import com.nowellpoint.api.model.OrganizationRequest;
-import com.nowellpoint.api.model.CreateOrganizationResult;
 import com.nowellpoint.api.service.OrganizationService;
 import com.nowellpoint.api.util.JsonbUtil;
 import com.nowellpoint.client.sforce.OauthException;
@@ -33,20 +32,16 @@ public class OrganizationResource {
 		
 		OrganizationRequest request = JsonbUtil.fromJson(requestBody, OrganizationRequest.class);
     	
-    	Organization connection = null;
+    	Organization organization = null;
     	
     	try {
-    		connection = orgnizationService.create(request);
+    		organization = orgnizationService.create(request);
     	} catch (OauthException e) {
     		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
     	}
     	
-    	CreateOrganizationResult result = CreateOrganizationResult.builder()
-    			.connection(connection)
-    			.build();
-    	
-        return Response.created(UriBuilder.fromResource(OrganizationResource.class).build(connection.getId()))
-        		.entity(result)
+        return Response.created(UriBuilder.fromResource(OrganizationResource.class).build(organization.getId()))
+        		.entity(organization)
         		.build();
     }
 }

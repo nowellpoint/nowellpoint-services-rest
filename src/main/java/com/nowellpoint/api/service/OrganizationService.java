@@ -1,11 +1,9 @@
 package com.nowellpoint.api.service;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import org.bson.Document;
 
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.nowellpoint.api.model.Organization;
 import com.nowellpoint.api.model.OrganizationRequest;
@@ -18,9 +16,11 @@ import com.nowellpoint.client.sforce.UsernamePasswordGrantRequest;
 import com.nowellpoint.client.sforce.model.Token;
 
 @ApplicationScoped
-public class OrganizationService {
+public class OrganizationService extends AbstractService {
 	
-	@Inject MongoClient mongoClient;
+	public OrganizationService() {
+		
+	}
 	
 	public Organization create(OrganizationRequest request) {
 		
@@ -39,28 +39,26 @@ public class OrganizationService {
 		Salesforce client = SalesforceClientBuilder.defaultClient(token);
 		
 		Organization organization = Organization.builder()
-    			.id(token.getId())
+    			.id(client.getOrganization().getId())
     			.instanceUrl(token.getInstanceUrl())
-    			.organizationId(client.getOrganization().getId())
+    			.organizationId(token.getId())
     			.username(request.getUsername())
     			.build();
 		
-		add(organization);
+		insert(organization);
 		
 		return organization;
 	}
 	
-	public void add(Organization organization){
-        Document document = new Document()
-                .append("_id", organization.getId())
-                .append("instanceUrl", organization.getInstanceUrl())
-                .append("organizationId", organization.getOrganizationId())
-                .append("username", organization.getUsername());
-        
-        getCollection().insertOne(document);
+	public void insert(Organization organization){        
+        getCollection().insertOne(organization);
     }
+	
+	public Organization find(String id) {
+		return getCollection().find(new Document("_id", id)).first();
+	}
 
-    private MongoCollection<Document> getCollection() {
-        return mongoClient.getDatabase("nowellpoint").getCollection("organizations");
+    private MongoCollection<Organization> getCollection() {
+        return getDatabase().getCollection("organizations", Organization.class);
     }
 }
