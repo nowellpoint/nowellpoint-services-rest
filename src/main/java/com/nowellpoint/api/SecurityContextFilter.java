@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 public class SecurityContextFilter implements ContainerRequestFilter, ContainerResponseFilter {
 	
 	@Inject
-	private Logger logger;
+	Logger logger;
 	
 	@Context
 	private ResourceInfo resourceInfo;

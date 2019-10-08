@@ -23,6 +23,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.eclipse.microprofile.config.Config;
 import org.jboss.logging.Logger;
 
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
@@ -42,7 +43,7 @@ import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import com.nowellpoint.api.model.Key;
 import com.nowellpoint.api.model.Keys;
 import com.nowellpoint.api.model.Token;
-import com.nowellpoint.api.util.ApplicationProperties;
+import com.nowellpoint.api.util.ConfigProperties;
 import com.nowellpoint.api.util.JsonbUtil;
 
 import io.jsonwebtoken.Claims;
@@ -54,33 +55,35 @@ import io.jsonwebtoken.SigningKeyResolverAdapter;
 
 @ApplicationScoped
 public class IdentityProviderService {
+	
 	private static final String USERNAME = "USERNAME";
 	private static final String PASSWORD = "PASSWORD";
 	private static final String NEW_PASSWORD = "NEW_PASSWORD";
 	
+	private static String AWS_REGION;
 	private static String COGNITO_IDP_JWKS_URL;
 	private static String COGNITO_CLIENT_ID;
 	private static String COGNITO_USER_POOL_ID;
-	
-	static {
-		System.out.println("identity provider : " + System.getProperty(ApplicationProperties.COGNITO_IDP_JWKS_URL));
-		COGNITO_IDP_JWKS_URL = System.getProperty(ApplicationProperties.COGNITO_IDP_JWKS_URL);
-		COGNITO_CLIENT_ID = System.getProperty(ApplicationProperties.COGNITO_CLIENT_ID);
-		COGNITO_USER_POOL_ID = System.getProperty(ApplicationProperties.COGNITO_USER_POOL_ID);
-	}
+	private static Keys keys;
 	
 	@Inject
-	private Logger logger;
+	Config config;
 	
-	private static Keys keys;
+	@Inject
+	Logger logger;
 	
 	@PostConstruct
 	public void init() {
 		
+		AWS_REGION = config.getValue(ConfigProperties.AWS_REGION, String.class);
+		COGNITO_IDP_JWKS_URL = config.getValue(ConfigProperties.COGNITO_IDP_JWKS_URL, String.class);
+		COGNITO_CLIENT_ID = config.getValue(ConfigProperties.COGNITO_CLIENT_ID, String.class);
+		COGNITO_USER_POOL_ID = config.getValue(ConfigProperties.COGNITO_USER_POOL_ID, String.class);
+		
 		try {
 			URIBuilder builder = new URIBuilder(String.format(COGNITO_IDP_JWKS_URL, 
-		    		System.getenv("AWS_REGION"), 
-		    		COGNITO_USER_POOL_ID));
+					AWS_REGION, 
+					COGNITO_USER_POOL_ID));
 			
 			HttpGet get = new HttpGet(builder.build());
 			

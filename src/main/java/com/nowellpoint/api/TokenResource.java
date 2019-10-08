@@ -24,7 +24,7 @@ import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
 public class TokenResource {
 	
 	@Inject
-	private IdentityProviderService identityProviderService;
+	IdentityProviderService identityProviderService;
 	
 	@POST
 	@Path("/authorize")
