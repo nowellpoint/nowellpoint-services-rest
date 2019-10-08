@@ -1,6 +1,6 @@
 package com.nowellpoint.api.service;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 
 import org.bson.Document;
 
@@ -15,7 +15,7 @@ import com.nowellpoint.client.sforce.SalesforceClientBuilder;
 import com.nowellpoint.client.sforce.UsernamePasswordGrantRequest;
 import com.nowellpoint.client.sforce.model.Token;
 
-@ApplicationScoped
+@RequestScoped
 public class OrganizationService extends AbstractService {
 	
 	public OrganizationService() {

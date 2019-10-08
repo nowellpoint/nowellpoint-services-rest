@@ -5,7 +5,7 @@ import javax.inject.Inject;
 public class UserService extends AbstractService {
 	
 	@Inject
-	IdentityProviderService identityProviderService;
+	private IdentityProviderService identityProviderService;
 	
 	public void create() {
 		
