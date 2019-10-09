@@ -10,33 +10,33 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import com.nowellpoint.api.model.Organization;
-import com.nowellpoint.api.model.CreateOrganizationRequest;
-import com.nowellpoint.api.service.OrganizationService;
+import com.nowellpoint.api.model.CreateUserRequest;
+import com.nowellpoint.api.model.User;
+import com.nowellpoint.api.service.UserService;
 import com.nowellpoint.client.sforce.OauthException;
 import com.nowellpoint.http.Status;
 
-@Path("/organizations")
-public class OrganizationResource {
+@Path("/users")
+public class UserResource {
 	
 	@Inject
-	OrganizationService orgnizationService;
+	UserService userService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOrganization(CreateOrganizationRequest request) {
-		    	
-    	Organization organization = null;
+    public Response createUser(CreateUserRequest request) {
+    	
+    	User user = null;
     	
     	try {
-    		organization = orgnizationService.create(request);
+    		user = userService.create(request);
     	} catch (OauthException e) {
     		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
     	}
     	
-        return Response.created(UriBuilder.fromResource(OrganizationResource.class).build(organization.getId()))
-        		.entity(organization)
+        return Response.created(UriBuilder.fromResource(UserResource.class).build(user.getId()))
+        		.entity(user)
         		.build();
     }
 }

@@ -7,6 +7,7 @@ public class ConfigProperties {
 	 */
 	
 	public static final String AWS_REGION = "AWS_REGION";
+	public static final String AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY";
 	
 	/**
 	 * application properties

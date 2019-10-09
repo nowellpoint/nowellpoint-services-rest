@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -27,19 +28,23 @@ import org.eclipse.microprofile.config.Config;
 import org.jboss.logging.Logger;
 
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
+import com.amazonaws.services.cognitoidp.model.AdminCreateUserRequest;
+import com.amazonaws.services.cognitoidp.model.AdminCreateUserResult;
 import com.amazonaws.services.cognitoidp.model.AdminDeleteUserRequest;
 import com.amazonaws.services.cognitoidp.model.AdminDisableUserRequest;
 import com.amazonaws.services.cognitoidp.model.AdminRespondToAuthChallengeRequest;
 import com.amazonaws.services.cognitoidp.model.AdminRespondToAuthChallengeResult;
+import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.AuthFlowType;
 import com.amazonaws.services.cognitoidp.model.AuthenticationResultType;
 import com.amazonaws.services.cognitoidp.model.ChallengeNameType;
+import com.amazonaws.services.cognitoidp.model.DeliveryMediumType;
 import com.amazonaws.services.cognitoidp.model.GlobalSignOutRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
+import com.nowellpoint.api.model.CreateUserRequest;
 import com.nowellpoint.api.model.Key;
 import com.nowellpoint.api.model.Keys;
 import com.nowellpoint.api.model.Token;
@@ -56,11 +61,13 @@ import io.jsonwebtoken.SigningKeyResolverAdapter;
 @ApplicationScoped
 public class IdentityProviderService {
 	
-	private static final String USERNAME = "USERNAME";
-	private static final String PASSWORD = "PASSWORD";
-	private static final String NEW_PASSWORD = "NEW_PASSWORD";
+	private static final String USERNAME                  = "USERNAME";
+	private static final String PASSWORD                  = "PASSWORD";
+	private static final String NEW_PASSWORD              = "NEW_PASSWORD";
+	private static final String NEW_PASSWORD_REQUIRED     = "NEW_PASSWORD_REQUIRED";
 	
 	private static String AWS_REGION;
+	private static String AWS_SECRET_ACCESS_KEY;
 	private static String COGNITO_IDP_JWKS_URL;
 	private static String COGNITO_CLIENT_ID;
 	private static String COGNITO_USER_POOL_ID;
@@ -75,15 +82,14 @@ public class IdentityProviderService {
 	@PostConstruct
 	public void init() {
 		
-		AWS_REGION = config.getValue(ConfigProperties.AWS_REGION, String.class);
-		COGNITO_IDP_JWKS_URL = config.getValue(ConfigProperties.COGNITO_IDP_JWKS_URL, String.class);
-		COGNITO_CLIENT_ID = config.getValue(ConfigProperties.COGNITO_CLIENT_ID, String.class);
-		COGNITO_USER_POOL_ID = config.getValue(ConfigProperties.COGNITO_USER_POOL_ID, String.class);
+		AWS_REGION                   = config.getValue(ConfigProperties.AWS_REGION, String.class);
+		AWS_SECRET_ACCESS_KEY        = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
+		COGNITO_IDP_JWKS_URL         = config.getValue(ConfigProperties.COGNITO_IDP_JWKS_URL, String.class);
+		COGNITO_CLIENT_ID            = config.getValue(ConfigProperties.COGNITO_CLIENT_ID, String.class);
+		COGNITO_USER_POOL_ID         = config.getValue(ConfigProperties.COGNITO_USER_POOL_ID, String.class);
 		
 		try {
-			URIBuilder builder = new URIBuilder(String.format(COGNITO_IDP_JWKS_URL, 
-					AWS_REGION, 
-					COGNITO_USER_POOL_ID));
+			URIBuilder builder = new URIBuilder(String.format(COGNITO_IDP_JWKS_URL, AWS_REGION, COGNITO_USER_POOL_ID));
 			
 			HttpGet get = new HttpGet(builder.build());
 			
@@ -93,7 +99,7 @@ public class IdentityProviderService {
 			if (response.getStatusLine().getStatusCode() == 200) {
 				keys = JsonbUtil.fromJson(response.getEntity().getContent(), Keys.class); 
 			} else {
-				logger.error(IOUtils.toString(response.getEntity().getContent(), "utf-8"));
+				logger.error(IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name()));
 			}
 			
 		} catch (URISyntaxException | IOException e) {
@@ -119,7 +125,7 @@ public class IdentityProviderService {
 				.setExpiration(claims.getBody().getExpiration())
 				.setIssuedAt(claims.getBody().getIssuedAt())
 				.claim("scope", claims.getBody().get("cognito:groups"))
-				.signWith(SignatureAlgorithm.HS256, System.getenv("AWS_SECRET_ACCESS_KEY").getBytes("UTF-8"))
+				.signWith(SignatureAlgorithm.HS256, AWS_SECRET_ACCESS_KEY.getBytes("UTF-8"))
 				.compact();
 	    
 	    Token token = Token.builder()
@@ -130,6 +136,46 @@ public class IdentityProviderService {
 	    		.build();
 		
 		return token;
+	}
+	
+	public String createUser(CreateUserRequest request) {
+		AWSCognitoIdentityProvider cognitoClient = getAmazonCognitoIdentityClient();
+		AdminCreateUserRequest cognitoRequest = new AdminCreateUserRequest()
+		       .withUserPoolId(COGNITO_USER_POOL_ID)
+		       .withUsername(request.getEmail())
+		       .withUserAttributes(
+		    		  new AttributeType()
+		    		  .withName("email")
+		    		  .withValue(request.getEmail()),
+		              new AttributeType()
+		              .withName("name")
+		              .withValue(request.getFirstName()),
+		              new AttributeType()
+		              .withName("family_name")
+		              .withValue(request.getLastName()),
+		              new AttributeType()
+		              .withName("phone_number")
+		              .withValue("+01".concat(request.getPhone())),
+		              new AttributeType()
+		              .withName("zoneinfo")
+		              .withValue(request.getTimeZone()),
+		              new AttributeType()
+		              .withName("email_verified")
+		              .withValue("false"))
+		              .withTemporaryPassword("Mz%hKNy1")
+		              .withMessageAction("SUPPRESS")
+		              .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL)
+		              .withForceAliasCreation(Boolean.FALSE);
+		 
+		AdminCreateUserResult createUserResult =  cognitoClient.adminCreateUser(cognitoRequest);
+		
+		return createUserResult.getUser()
+				.getAttributes()
+				.stream()
+				.filter(a -> "sub".equals(a.getName()))
+				.findFirst()
+				.get()
+				.getValue();
 	}
 	
 	public void revoke(String accessToken) {
@@ -171,7 +217,7 @@ public class IdentityProviderService {
 	    InitiateAuthResult authResult = cognitoClient.initiateAuth(authRequest);
 	    
 	    if (StringUtils.isNotBlank(authResult.getChallengeName())) {
-	    	if ("NEW_PASSWORD_REQUIRED".equals(authResult.getChallengeName())) {
+	    	if (NEW_PASSWORD_REQUIRED.equals(authResult.getChallengeName())) {
 	    		final Map<String, String> challengeResponses = new HashMap<>();
 	    		challengeResponses.put(USERNAME, authParams.get(USERNAME));
 	    		challengeResponses.put(PASSWORD, authParams.get(PASSWORD));
@@ -215,7 +261,7 @@ public class IdentityProviderService {
 	private AWSCognitoIdentityProvider getAmazonCognitoIdentityClient() {
 	    return AWSCognitoIdentityProviderClientBuilder.standard()
 	    		.withCredentials(new EnvironmentVariableCredentialsProvider())
-	    		.withRegion(Regions.US_EAST_1)
+	    		.withRegion(AWS_REGION)
 	    		.build();
 	}
 }

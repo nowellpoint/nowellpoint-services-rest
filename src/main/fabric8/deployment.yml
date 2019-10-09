@@ -1,0 +1,25 @@
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+          - name: AWS_REGION
+            valueFrom:
+              secretKeyRef:
+                name: aws.secrets
+                key: region
+          - name: AWS_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aws.secrets
+                key: access.key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aws.secrets
+                key: secret.access.key
+          - name: AWS_SECRET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: aws.secrets
+                key: secret.name

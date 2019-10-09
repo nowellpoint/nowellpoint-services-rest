@@ -6,7 +6,7 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 import com.nowellpoint.api.model.Organization;
-import com.nowellpoint.api.model.OrganizationRequest;
+import com.nowellpoint.api.model.CreateOrganizationRequest;
 import com.nowellpoint.client.sforce.Authenticators;
 import com.nowellpoint.client.sforce.OauthAuthenticationResponse;
 import com.nowellpoint.client.sforce.OauthRequests;
@@ -22,7 +22,7 @@ public class OrganizationService extends AbstractService {
 		
 	}
 	
-	public Organization create(OrganizationRequest request) {
+	public Organization create(CreateOrganizationRequest request) {
 		
 		UsernamePasswordGrantRequest authRequest = OauthRequests.PASSWORD_GRANT_REQUEST.builder()
 				.setClientId(request.getClientId())
@@ -50,13 +50,13 @@ public class OrganizationService extends AbstractService {
 		return organization;
 	}
 	
-	public void insert(Organization organization){        
-        getCollection().insertOne(organization);
-    }
-	
 	public Organization find(String id) {
 		return getCollection().find(new Document("_id", id)).first();
 	}
+	
+	private void insert(Organization organization){        
+        getCollection().insertOne(organization);
+    }
 
     private MongoCollection<Organization> getCollection() {
         return getDatabase().getCollection("organizations", Organization.class);
