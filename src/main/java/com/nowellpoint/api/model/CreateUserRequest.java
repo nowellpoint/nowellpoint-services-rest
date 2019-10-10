@@ -1,30 +1,27 @@
 package com.nowellpoint.api.model;
 
-import javax.json.bind.annotation.JsonbCreator;
-import javax.json.bind.annotation.JsonbProperty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
 
 @Getter
 public class CreateUserRequest {
-	private String email;
-	private String firstName;
-	private String lastName;
-	private String phone;
-	private String timeZone;
 	
-	@JsonbCreator
-    public CreateUserRequest(
-    		@JsonbProperty("email") String email,
-    		@JsonbProperty("firstName") String firstName,
-    		@JsonbProperty("lastName") String lastName,
-    		@JsonbProperty("phone") String phone,
-    		@JsonbProperty("timeZone") String timeZone) {
-		
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.timeZone = timeZone;
-    }
+	@Email
+	private String email;
+	
+	private String firstName;
+	
+	@NotEmpty
+	private String lastName;
+	
+	@NotEmpty
+	private String phone;
+	
+	@NotEmpty
+	private String countryCode;
+	
+	@NotEmpty(message="A valid time zone must be provided. Valid time zones at this time are: America/New_York")
+	private String timeZone;
 }

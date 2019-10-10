@@ -155,7 +155,7 @@ public class IdentityProviderService {
 		              .withValue(request.getLastName()),
 		              new AttributeType()
 		              .withName("phone_number")
-		              .withValue("+01".concat(request.getPhone())),
+		              .withValue("+1".concat(request.getPhone())),
 		              new AttributeType()
 		              .withName("zoneinfo")
 		              .withValue(request.getTimeZone()),

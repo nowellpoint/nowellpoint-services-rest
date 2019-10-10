@@ -19,6 +19,8 @@ public class UserService extends AbstractService {
 		
 		User user = User.builder()
 				.id(subject)
+				.country("United States")
+				.countryCode(request.getCountryCode())
 				.email(request.getEmail())
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())

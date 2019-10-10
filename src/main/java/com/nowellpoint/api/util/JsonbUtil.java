@@ -16,6 +16,7 @@ public class JsonbUtil {
 	
 	static {
 		JsonbConfig config = new JsonbConfig()
+				.withNullValues(true)
 				.withPropertyVisibilityStrategy(new PropertyVisibilityStrategy() {
 					@Override
 					public boolean isVisible(Field field) {
