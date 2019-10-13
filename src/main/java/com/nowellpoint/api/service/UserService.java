@@ -3,6 +3,8 @@ package com.nowellpoint.api.service;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+import org.bson.Document;
+
 import com.mongodb.client.MongoCollection;
 import com.nowellpoint.api.model.CreateUserRequest;
 import com.nowellpoint.api.model.User;
@@ -12,6 +14,10 @@ public class UserService extends AbstractService {
 	
 	@Inject
 	IdentityProviderService identityProviderService;
+	
+	public User findById(String id) {
+		return getCollection().find(new Document("_id", id)).first();
+	}
 	
 	public User create(CreateUserRequest request) {
 		

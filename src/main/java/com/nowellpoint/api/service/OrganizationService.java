@@ -6,6 +6,7 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 import com.nowellpoint.api.model.Organization;
+import com.nowellpoint.api.model.UpdateOrganizationRequest;
 import com.nowellpoint.api.model.CreateOrganizationRequest;
 import com.nowellpoint.client.sforce.Authenticators;
 import com.nowellpoint.client.sforce.OauthAuthenticationResponse;
@@ -22,7 +23,41 @@ public class OrganizationService extends AbstractService {
 		
 	}
 	
+	public Organization findById(String id) {
+		return getCollection().find(new Document("_id", id)).first();
+	}
+	
 	public Organization create(CreateOrganizationRequest request) {
+		
+		UsernamePasswordGrantRequest authRequest = OauthRequests.PASSWORD_GRANT_REQUEST.builder()
+				.setClientId(request.getClientId())
+				.setClientSecret(request.getClientSecret())
+				.setUsername(request.getUsername())
+				.setPassword(request.getPassword())
+				.build();
+		
+		OauthAuthenticationResponse response = Authenticators.PASSWORD_GRANT_AUTHENTICATOR
+				.authenticate(authRequest);
+		
+		Token token = response.getToken();
+		
+		System.out.println("token: " + token.getAccessToken());
+		
+		Salesforce client = SalesforceClientBuilder.defaultClient(token);
+		
+		Organization organization = Organization.builder()
+    			.id(client.getOrganization().getId())
+    			.instanceUrl(token.getInstanceUrl())
+    			.organizationId(token.getId())
+    			.username(request.getUsername())
+    			.build();
+		
+		insert(organization);
+		
+		return organization;
+	}
+	
+	public Organization update(UpdateOrganizationRequest request) {
 		
 		UsernamePasswordGrantRequest authRequest = OauthRequests.PASSWORD_GRANT_REQUEST.builder()
 				.setClientId(request.getClientId())
@@ -45,7 +80,7 @@ public class OrganizationService extends AbstractService {
     			.username(request.getUsername())
     			.build();
 		
-		insert(organization);
+		replace(organization);
 		
 		return organization;
 	}
@@ -54,9 +89,13 @@ public class OrganizationService extends AbstractService {
 		return getCollection().find(new Document("_id", id)).first();
 	}
 	
-	private void insert(Organization organization){        
+	private void insert(Organization organization) {        
         getCollection().insertOne(organization);
     }
+	
+	private void replace(Organization organization) {
+		getCollection().replaceOne(new Document("_id", organization.getId()), organization);
+	}
 
     private MongoCollection<Organization> getCollection() {
         return getDatabase().getCollection("organizations", Organization.class);

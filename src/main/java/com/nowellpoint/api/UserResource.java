@@ -1,19 +1,21 @@
 package com.nowellpoint.api;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 import com.nowellpoint.api.model.CreateResponse;
 import com.nowellpoint.api.model.CreateUserRequest;
@@ -31,6 +33,18 @@ public class UserResource {
 	
 	@Inject
 	Validator validator;
+	
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUser(@PathParam("id") String id) {
+		User user = userService.findById(id);
+		if (user != null) {
+			return Response.ok(user).build();
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -40,6 +54,7 @@ public class UserResource {
     	CreateUserRequest request = JsonbUtil.fromJson(requestBody, CreateUserRequest.class);
     	
     	Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(request);
+    	
     	if (violations.isEmpty()) {
     		
     		User user = null;
@@ -49,7 +64,7 @@ public class UserResource {
         		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
         	}
         	
-            return Response.created(UriBuilder.fromResource(UserResource.class).build(user.getId()))
+            return Response.created(URI.create(user.getAttributes().getHref()))
             		.entity(new CreateResponse(user))
             		.build();
     	} else {

@@ -1,11 +1,14 @@
 package com.nowellpoint.api.model;
 
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.UriBuilder;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
+import com.nowellpoint.api.JaxRsActivator;
 import com.nowellpoint.api.UserResource;
 
 import lombok.Builder;
@@ -23,9 +26,14 @@ public class User {
 	private String country;
 	private String timeZone;
 	
+	@BsonIgnore
 	public Attributes getAttributes() {
 		return Attributes.builder()
-				.href(UriBuilder.fromResource(UserResource.class).build(getId()).toString())
+				.href(UriBuilder.fromPath(JaxRsActivator.class.getAnnotation(ApplicationPath.class).value())
+						.path(UserResource.class)
+						.path("{id}")
+						.build(getId())
+						.toString())
 				.type(User.class.getSimpleName())
 				.build();
 	}
