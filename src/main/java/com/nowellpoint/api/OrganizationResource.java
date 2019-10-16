@@ -1,6 +1,5 @@
 package com.nowellpoint.api;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Set;
 
@@ -17,13 +16,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.nowellpoint.api.model.Organization;
-import com.nowellpoint.api.model.UpdateOrganizationRequest;
 import com.mongodb.MongoWriteException;
-import com.nowellpoint.api.model.CreateOrganizationRequest;
+import com.nowellpoint.api.model.ConnectionRequest;
 import com.nowellpoint.api.model.CreateResponse;
+import com.nowellpoint.api.model.Organization;
 import com.nowellpoint.api.service.OrganizationService;
-import com.nowellpoint.api.util.JsonbUtil;
 import com.nowellpoint.client.sforce.OauthException;
 import com.nowellpoint.http.Status;
 
@@ -51,18 +48,16 @@ public class OrganizationResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOrganization(InputStream requestBody) {
+    public Response createOrganization(ConnectionRequest request) {
     	
-    	CreateOrganizationRequest request = JsonbUtil.fromJson(requestBody, CreateOrganizationRequest.class);
-    	
-    	Set<ConstraintViolation<CreateOrganizationRequest>> violations = validator.validate(request);
+    	Set<ConstraintViolation<ConnectionRequest>> violations = validator.validate(request);
     	
     	if (violations.isEmpty()) {
     		
     		Organization organization = null;
         	
         	try {
-        		organization = orgnizationService.create(request);
+        		organization = orgnizationService.build(request);
         	} catch (OauthException e) {
         		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
         	}
@@ -82,18 +77,16 @@ public class OrganizationResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateOrganization(InputStream requestBody) {
+    public Response updateOrganization(ConnectionRequest request) {
     	
-    	UpdateOrganizationRequest request = JsonbUtil.fromJson(requestBody, UpdateOrganizationRequest.class);
-    	
-    	Set<ConstraintViolation<UpdateOrganizationRequest>> violations = validator.validate(request);
+    	Set<ConstraintViolation<ConnectionRequest>> violations = validator.validate(request);
     	
     	if (violations.isEmpty()) {
     		
     		Organization organization = null;
         	
         	try {
-        		organization = orgnizationService.update(request);
+        		organization = orgnizationService.build(request);
         	} catch (OauthException e) {
         		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
         	} catch (MongoWriteException e) {

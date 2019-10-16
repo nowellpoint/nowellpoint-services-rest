@@ -5,12 +5,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import javax.inject.Singleton;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import javax.json.bind.config.PropertyVisibilityStrategy;
 
-public class JsonbUtil {
+import io.quarkus.jsonb.JsonbConfigCustomizer;
+
+@Singleton
+public class JsonbUtil implements JsonbConfigCustomizer {
 	
 	private static Jsonb jsonb;
 	
@@ -38,5 +42,20 @@ public class JsonbUtil {
 	
 	public static <T> T fromJson(String source, Class<T> type) {
 		return jsonb.fromJson(source, type);
+	}
+
+	@Override
+	public void customize(JsonbConfig jsonbConfig) {
+		jsonbConfig.withNullValues(true).withPropertyVisibilityStrategy(new PropertyVisibilityStrategy() {
+			@Override
+			public boolean isVisible(Field field) {
+				return Modifier.isPrivate(field.getModifiers());
+			}
+			
+			@Override
+			public boolean isVisible(Method method) {
+				return false;
+			}
+		});	
 	}
 }

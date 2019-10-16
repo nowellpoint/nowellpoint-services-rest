@@ -11,7 +11,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <aws.version>1.11.628</aws.version>
     <maven.compiler.source>1.8</maven.compiler.source>
-    <quarkus.version>0.23.1</quarkus.version>
+    <quarkus.version>0.24.0</quarkus.version>
     <jjwt.version>0.9.1</jjwt.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

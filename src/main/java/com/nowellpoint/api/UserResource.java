@@ -1,6 +1,5 @@
 package com.nowellpoint.api;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import com.nowellpoint.api.model.CreateResponse;
 import com.nowellpoint.api.model.CreateUserRequest;
 import com.nowellpoint.api.model.User;
 import com.nowellpoint.api.service.UserService;
-import com.nowellpoint.api.util.JsonbUtil;
 import com.nowellpoint.client.sforce.OauthException;
 import com.nowellpoint.http.Status;
 
@@ -49,9 +47,7 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(InputStream requestBody) {
-    	
-    	CreateUserRequest request = JsonbUtil.fromJson(requestBody, CreateUserRequest.class);
+    public Response createUser(CreateUserRequest request) {
     	
     	Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(request);
     	

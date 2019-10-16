@@ -15,12 +15,14 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(toBuilder=true)
 public class Organization {
 	private @BsonId String id;
-	private String username;
-	private String organizationId;
+	private String name;
 	private String instanceUrl;
+	private String organizationType;
+	private Connection connection;
+	private Address address;
 	
 	@BsonIgnore
 	public Attributes getAttributes() {
@@ -36,14 +38,18 @@ public class Organization {
 	
 	@BsonCreator
 	public Organization(
-			@BsonId String id, 
-			@BsonProperty("username") String username, 
-			@BsonProperty("organizationId") String organizationId, 
-			@BsonProperty("instanceUrl") String instanceUrl) {
+			@BsonId String id,  
+			@BsonProperty("name") String name,
+			@BsonProperty("instanceUrl") String instanceUrl,
+			@BsonProperty("organizationType") String organizationType,
+			@BsonProperty("connection") Connection connection,
+			@BsonProperty("address") Address address) {
 		
 		this.id = id;
-		this.username = username;
-		this.organizationId = organizationId;
+		this.name = name;
 		this.instanceUrl = instanceUrl;
+		this.organizationType = organizationType;
+		this.connection = connection;
+		this.address = address;
 	}
 }

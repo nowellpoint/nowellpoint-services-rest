@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 @Getter
-public class UpdateOrganizationRequest {
+public class ConnectionRequest {
 	
 	@NotEmpty
 	private String clientId;

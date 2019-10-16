@@ -3,6 +3,8 @@ package com.nowellpoint.api.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.json.bind.JsonbBuilder;
+
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
@@ -29,7 +31,7 @@ public class SecretsConfig implements ConfigSource {
 
         GetSecretValueResult getSecretValueResult = client.getSecretValue(getSecretValueRequest);
         
-        PROPERTIES.putAll(JsonbUtil.fromJson(getSecretValueResult.getSecretString(), HashMap.class));
+        PROPERTIES.putAll(JsonbBuilder.create().fromJson(getSecretValueResult.getSecretString(), HashMap.class));
 	}
 
 	@Override
