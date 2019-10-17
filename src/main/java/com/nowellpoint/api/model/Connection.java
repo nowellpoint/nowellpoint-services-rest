@@ -1,5 +1,9 @@
 package com.nowellpoint.api.model;
 
+import java.time.Instant;
+
+import javax.json.bind.annotation.JsonbTransient;
+
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
@@ -9,21 +13,24 @@ import lombok.Value;
 @Value
 @Builder
 public class Connection {
-	private String id;
+	private String identity;
 	private String connectedAs;
-	private String instanceUrl;
-	private String connectionString;
+	private Instant connectedOn;
+	private @JsonbTransient String connectionString;
+	private String instance;
 	
 	@BsonCreator
 	public Connection(
-			@BsonProperty("id") String id, 
+			@BsonProperty("identity") String identity, 
 			@BsonProperty("connectedAs") String connectedAs, 
+			@BsonProperty("connectedOn") Instant connectedOn,
 			@BsonProperty("connectionString") String connectionString, 
-			@BsonProperty("instanceUrl") String instanceUrl) {
+			@BsonProperty("instance") String instance) {
 		
-		this.id = id;
+		this.identity = identity;
 		this.connectedAs = connectedAs;
+		this.connectedOn = connectedOn;
 		this.connectionString = connectionString;
-		this.instanceUrl = instanceUrl;
+		this.instance = instance;
 	}
 }

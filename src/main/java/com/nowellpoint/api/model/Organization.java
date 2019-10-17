@@ -1,5 +1,7 @@
 package com.nowellpoint.api.model;
 
+import java.time.Instant;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.UriBuilder;
 
@@ -19,8 +21,9 @@ import lombok.Value;
 public class Organization {
 	private @BsonId String id;
 	private String name;
-	private String instanceUrl;
 	private String organizationType;
+	private Instant createdOn;
+	private Instant updatedOn;
 	private Connection connection;
 	private Address address;
 	
@@ -40,15 +43,17 @@ public class Organization {
 	public Organization(
 			@BsonId String id,  
 			@BsonProperty("name") String name,
-			@BsonProperty("instanceUrl") String instanceUrl,
 			@BsonProperty("organizationType") String organizationType,
+			@BsonProperty("createdOn") Instant createdOn,
+			@BsonProperty("updatedOn") Instant updatedOn,
 			@BsonProperty("connection") Connection connection,
 			@BsonProperty("address") Address address) {
 		
 		this.id = id;
 		this.name = name;
-		this.instanceUrl = instanceUrl;
 		this.organizationType = organizationType;
+		this.createdOn = createdOn;
+		this.updatedOn = updatedOn;
 		this.connection = connection;
 		this.address = address;
 	}

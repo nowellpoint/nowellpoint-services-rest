@@ -1,10 +1,13 @@
 package com.nowellpoint.api.service;
 
+import java.time.Instant;
+
 import javax.enterprise.context.RequestScoped;
 
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.nowellpoint.api.model.Address;
 import com.nowellpoint.api.model.Connection;
 import com.nowellpoint.api.model.ConnectionRequest;
@@ -54,6 +57,8 @@ public class OrganizationService extends AbstractService {
 		
 		Salesforce client = SalesforceClientBuilder.defaultClient(token);
 		
+		Organization instance = find(client.getOrganization().getId());
+		
 		Address address = Address.builder()
 				.city(client.getOrganization().getAddress().getCity())
 				.country(client.getOrganization().getAddress().getCountry())
@@ -65,21 +70,24 @@ public class OrganizationService extends AbstractService {
 				.build();
 		
 		Connection connection = Connection.builder()
-				.connectedAs(request.getUsername())
+				.connectedAs(client.getIdentity().getUsername())
+				.connectedOn(Instant.now())
 				.connectionString(connectionString)
-				.id(token.getId())
-				.instanceUrl(token.getInstanceUrl())
+				.identity(token.getId())
+				.instance(token.getInstanceUrl())
 				.build();
 		
 		Organization organization = Organization.builder()
 				.connection(connection)
+				.organizationType(client.getOrganization().getOrganizationType())
     			.id(client.getOrganization().getId())
-    			.instanceUrl(token.getInstanceUrl())
     			.address(address)
     			.name(client.getOrganization().getName())
+    			.createdOn(instance != null ? instance.getCreatedOn() : Instant.now())
+    			.updatedOn(Instant.now())
     			.build();
 		
-		insert(organization);
+		createOrUpdate(organization);
 		
 		return organization;
 	}
@@ -88,12 +96,8 @@ public class OrganizationService extends AbstractService {
 		return getCollection().find(new Document("_id", id)).first();
 	}
 	
-	private void insert(Organization organization) {        
-        getCollection().insertOne(organization);
-    }
-	
-	private void replace(Organization organization) {
-		getCollection().replaceOne(new Document("_id", organization.getId()), organization);
+	private void createOrUpdate(Organization organization) {
+		getCollection().findOneAndReplace(new Document("_id", organization.getId()), organization, new FindOneAndReplaceOptions().upsert(Boolean.TRUE));
 	}
 
     private MongoCollection<Organization> getCollection() {
