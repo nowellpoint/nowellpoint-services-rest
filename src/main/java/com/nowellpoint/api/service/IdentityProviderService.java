@@ -1,12 +1,20 @@
 package com.nowellpoint.api.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
@@ -44,12 +52,12 @@ import com.amazonaws.services.cognitoidp.model.DeliveryMediumType;
 import com.amazonaws.services.cognitoidp.model.GlobalSignOutRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
-import com.nowellpoint.api.model.CreateUserRequest;
-import com.nowellpoint.api.model.Key;
-import com.nowellpoint.api.model.Keys;
-import com.nowellpoint.api.model.Token;
-import com.nowellpoint.api.util.ConfigProperties;
-import com.nowellpoint.api.util.JsonbUtil;
+import com.nowellpoint.services.rest.model.CreateUserRequest;
+import com.nowellpoint.services.rest.model.Key;
+import com.nowellpoint.services.rest.model.Keys;
+import com.nowellpoint.services.rest.model.Token;
+import com.nowellpoint.services.rest.util.ConfigProperties;
+import com.nowellpoint.services.rest.util.JsonbUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -65,9 +73,9 @@ public class IdentityProviderService {
 	private static final String PASSWORD                  = "PASSWORD";
 	private static final String NEW_PASSWORD              = "NEW_PASSWORD";
 	private static final String NEW_PASSWORD_REQUIRED     = "NEW_PASSWORD_REQUIRED";
+	private static final String REFRESH_TOKEN             = "REFRESH_TOKEN";
 	
 	private static String AWS_REGION;
-	private static String AWS_SECRET_ACCESS_KEY;
 	private static String COGNITO_IDP_JWKS_URL;
 	private static String COGNITO_CLIENT_ID;
 	private static String COGNITO_USER_POOL_ID;
@@ -83,7 +91,6 @@ public class IdentityProviderService {
 	public void init() {
 		
 		AWS_REGION                   = config.getValue(ConfigProperties.AWS_REGION, String.class);
-		AWS_SECRET_ACCESS_KEY        = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
 		COGNITO_IDP_JWKS_URL         = config.getValue(ConfigProperties.COGNITO_IDP_JWKS_URL, String.class);
 		COGNITO_CLIENT_ID            = config.getValue(ConfigProperties.COGNITO_CLIENT_ID, String.class);
 		COGNITO_USER_POOL_ID         = config.getValue(ConfigProperties.COGNITO_USER_POOL_ID, String.class);
@@ -105,37 +112,6 @@ public class IdentityProviderService {
 		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public Token authenticate(String username, String password) throws UnsupportedEncodingException {
-		final Map<String, String> authParams = new HashMap<>();
-		authParams.put(USERNAME, username);  
-		authParams.put(PASSWORD, password);
-		
-		AuthenticationResultType authenticationResult = authenticate(authParams);
-	    
-	    Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
-	    
-	    String jwt = Jwts.builder()
-				.setHeaderParam("kid", claims.getHeader().getKeyId())
-				.setId(claims.getBody().getId())
-				.setIssuer(claims.getBody().getIssuer())
-				.setAudience("nowellpoint.com")
-				.setSubject(claims.getBody().getSubject())
-				.setExpiration(claims.getBody().getExpiration())
-				.setIssuedAt(claims.getBody().getIssuedAt())
-				.claim("scope", claims.getBody().get("cognito:groups"))
-				.signWith(SignatureAlgorithm.HS256, AWS_SECRET_ACCESS_KEY.getBytes("UTF-8"))
-				.compact();
-	    
-	    Token token = Token.builder()
-	    		.accessToken(jwt)
-	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
-	    		.refreshToken(authenticationResult.getRefreshToken())
-	    		.tokenType(authenticationResult.getTokenType())
-	    		.build();
-		
-		return token;
 	}
 	
 	public String createUser(CreateUserRequest request) {
@@ -178,7 +154,60 @@ public class IdentityProviderService {
 				.getValue();
 	}
 	
-	public void revoke(String accessToken) {
+	public Token authenticate(String username, String password) throws UnsupportedEncodingException {
+		final Map<String, String> authParams = new HashMap<>();
+		authParams.put(USERNAME, username);  
+		authParams.put(PASSWORD, password);
+		
+		AuthenticationResultType authenticationResult = authenticate(authParams);
+	    
+		try {
+			String accessToken = generateAccessToken(authenticationResult);
+			System.out.println(accessToken);
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException
+				| IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	    Token token = Token.builder()
+	    		//.accessToken(accessToken)
+	    		.accessToken(authenticationResult.getAccessToken())
+	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
+	    		.refreshToken(authenticationResult.getRefreshToken())
+	    		.tokenType(authenticationResult.getTokenType())
+	    		.build();
+		
+		return token;
+	}
+	
+	public Token refreshToken(String refreshToken) throws UnsupportedEncodingException {
+		final Map<String, String> authParams = new HashMap<>();
+		authParams.put(REFRESH_TOKEN, refreshToken);  
+		
+		AuthenticationResultType authenticationResult = refreshToken(authParams);
+	    
+	    String accessToken = null;
+		try {
+			accessToken = generateAccessToken(authenticationResult);
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException
+				| IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    Token token = Token.builder()
+	    		.accessToken(accessToken)
+	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
+	    		.refreshToken(refreshToken)
+	    		.tokenType(authenticationResult.getTokenType())
+	    		.build();
+		
+		return token;
+	}
+	
+	public void revokeToken(String accessToken) {
+		logger.info(accessToken);
 		GlobalSignOutRequest globalSignOutRequest = new GlobalSignOutRequest().withAccessToken(accessToken);
 		AWSCognitoIdentityProvider cognitoClient = getAmazonCognitoIdentityClient();
 		cognitoClient.globalSignOut(globalSignOutRequest);
@@ -203,6 +232,26 @@ public class IdentityProviderService {
 	@PreDestroy() 
 	public void sthudown() {
 		getAmazonCognitoIdentityClient().shutdown();
+	}
+	
+	private AuthenticationResultType refreshToken(Map<String, String> authParams) {
+		AuthenticationResultType authenticationResultType = null;
+		AWSCognitoIdentityProvider cognitoClient = getAmazonCognitoIdentityClient();
+		
+		final InitiateAuthRequest authRequest = new InitiateAuthRequest()
+	    		.withAuthFlow(AuthFlowType.REFRESH_TOKEN)
+	    		.withClientId(COGNITO_CLIENT_ID)
+	    		.withAuthParameters(authParams);
+		
+		InitiateAuthResult authResult = cognitoClient.initiateAuth(authRequest);
+		
+		if (StringUtils.isNotBlank(authResult.getChallengeName())) {
+			
+		} else {
+			authenticationResultType = authResult.getAuthenticationResult();
+		}
+		
+		return authenticationResultType;
 	}
 	
 	private AuthenticationResultType authenticate(Map<String, String> authParams) {
@@ -238,6 +287,33 @@ public class IdentityProviderService {
 	    }
 	    
 	    return authenticationResultType;
+	}
+	
+	private String generateAccessToken(AuthenticationResultType authenticationResult) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+		Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
+		
+		//InputStream is = getClass().getClassLoader().getResourceAsStream("keystore.jks");
+		FileInputStream is = new FileInputStream("/Users/jherson/workspace/nowellpoint-api/keystore.jks");
+        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keystore.load(is, "password".toCharArray());
+
+        java.security.Key key = keystore.getKey("selfsigned", "password".toCharArray());
+        
+        //Certificate cert = keystore.getCertificate("selfsigned");
+        //PublicKey publicKey = cert.getPublicKey();
+	    
+	    return Jwts.builder()
+				.setHeaderParam("kid", claims.getHeader().getKeyId())
+				.setId(claims.getBody().getId())
+				.setIssuer(claims.getBody().getIssuer())
+				.setAudience("nowellpoint.com")
+				.setSubject(claims.getBody().getSubject())
+				.setExpiration(claims.getBody().getExpiration())
+				.setIssuedAt(claims.getBody().getIssuedAt())
+				.claim("groups", claims.getBody().get("cognito:groups"))
+				.signWith(SignatureAlgorithm.valueOf(claims.getHeader().getAlgorithm()), key)
+				.compact();
+	  
 	}
 	
 	private Jws<Claims> getClaims(String token) {

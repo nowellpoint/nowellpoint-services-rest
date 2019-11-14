@@ -8,10 +8,6 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
-import com.nowellpoint.api.model.Address;
-import com.nowellpoint.api.model.Connection;
-import com.nowellpoint.api.model.ConnectionRequest;
-import com.nowellpoint.api.model.Organization;
 import com.nowellpoint.client.sforce.Authenticators;
 import com.nowellpoint.client.sforce.OauthAuthenticationResponse;
 import com.nowellpoint.client.sforce.OauthRequests;
@@ -19,6 +15,10 @@ import com.nowellpoint.client.sforce.Salesforce;
 import com.nowellpoint.client.sforce.SalesforceClientBuilder;
 import com.nowellpoint.client.sforce.UsernamePasswordGrantRequest;
 import com.nowellpoint.client.sforce.model.Token;
+import com.nowellpoint.services.rest.model.Address;
+import com.nowellpoint.services.rest.model.Connection;
+import com.nowellpoint.services.rest.model.ConnectionRequest;
+import com.nowellpoint.services.rest.model.Organization;
 import com.nowellpoint.util.SecureValue;
 
 @RequestScoped

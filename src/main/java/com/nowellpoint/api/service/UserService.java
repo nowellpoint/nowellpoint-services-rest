@@ -6,8 +6,8 @@ import javax.inject.Inject;
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
-import com.nowellpoint.api.model.CreateUserRequest;
-import com.nowellpoint.api.model.User;
+import com.nowellpoint.services.rest.model.CreateUserRequest;
+import com.nowellpoint.services.rest.model.User;
 
 @RequestScoped
 public class UserService extends AbstractService {
