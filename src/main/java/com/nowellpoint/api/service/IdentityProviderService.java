@@ -2,7 +2,6 @@ package com.nowellpoint.api.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
@@ -20,10 +19,12 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
@@ -80,12 +81,19 @@ public class IdentityProviderService {
 	private static String COGNITO_CLIENT_ID;
 	private static String COGNITO_USER_POOL_ID;
 	private static Keys keys;
+
+	private static char[] chars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'a', 's',
+	        'd', 'f', 'g', 'h', 'j', 'k', 'l', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'A',
+	        'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', '<', '=', '>', '?', '@' };
 	
 	@Inject
 	Config config;
 	
 	@Inject
 	Logger logger;
+
+	@Inject
+	Event<Claims> authenticationEvent; 
 	
 	@PostConstruct
 	public void init() {
@@ -118,7 +126,7 @@ public class IdentityProviderService {
 		AWSCognitoIdentityProvider cognitoClient = getAmazonCognitoIdentityClient();
 		AdminCreateUserRequest cognitoRequest = new AdminCreateUserRequest()
 		       .withUserPoolId(COGNITO_USER_POOL_ID)
-		       .withUsername(request.getEmail())
+			   .withUsername(request.getEmail())
 		       .withUserAttributes(
 		    		  new AttributeType()
 		    		  .withName("email")
@@ -138,12 +146,12 @@ public class IdentityProviderService {
 		              new AttributeType()
 		              .withName("email_verified")
 		              .withValue("false"))
-		              .withTemporaryPassword("Mz%hKNy1")
+		              .withTemporaryPassword(generateTemporaryPassword(8))
 		              .withMessageAction("SUPPRESS")
 		              .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL)
 		              .withForceAliasCreation(Boolean.FALSE);
 		 
-		AdminCreateUserResult createUserResult =  cognitoClient.adminCreateUser(cognitoRequest);
+		AdminCreateUserResult createUserResult = cognitoClient.adminCreateUser(cognitoRequest);
 		
 		return createUserResult.getUser()
 				.getAttributes()
@@ -160,9 +168,13 @@ public class IdentityProviderService {
 		authParams.put(PASSWORD, password);
 		
 		AuthenticationResultType authenticationResult = authenticate(authParams);
+
+		Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
+
+		authenticationEvent.fireAsync(claims.getBody());
 	    
 		try {
-			String accessToken = generateAccessToken(authenticationResult);
+			String accessToken = generateAccessToken(claims);
 			System.out.println(accessToken);
 		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException
 				| IOException e) {
@@ -176,7 +188,7 @@ public class IdentityProviderService {
 	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
 	    		.refreshToken(authenticationResult.getRefreshToken())
 	    		.tokenType(authenticationResult.getTokenType())
-	    		.build();
+				.build();
 		
 		return token;
 	}
@@ -186,10 +198,12 @@ public class IdentityProviderService {
 		authParams.put(REFRESH_TOKEN, refreshToken);  
 		
 		AuthenticationResultType authenticationResult = refreshToken(authParams);
+
+		Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
 	    
 	    String accessToken = null;
 		try {
-			accessToken = generateAccessToken(authenticationResult);
+			accessToken = generateAccessToken(claims);
 		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException
 				| IOException e) {
 			// TODO Auto-generated catch block
@@ -207,7 +221,6 @@ public class IdentityProviderService {
 	}
 	
 	public void revokeToken(String accessToken) {
-		logger.info(accessToken);
 		GlobalSignOutRequest globalSignOutRequest = new GlobalSignOutRequest().withAccessToken(accessToken);
 		AWSCognitoIdentityProvider cognitoClient = getAmazonCognitoIdentityClient();
 		cognitoClient.globalSignOut(globalSignOutRequest);
@@ -289,9 +302,7 @@ public class IdentityProviderService {
 	    return authenticationResultType;
 	}
 	
-	private String generateAccessToken(AuthenticationResultType authenticationResult) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-		Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
-		
+	private String generateAccessToken(Jws<Claims> claims) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {	
 		//InputStream is = getClass().getClassLoader().getResourceAsStream("keystore.jks");
 		FileInputStream is = new FileInputStream("/Users/jherson/workspace/nowellpoint-api/keystore.jks");
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -339,5 +350,13 @@ public class IdentityProviderService {
 	    		.withCredentials(new EnvironmentVariableCredentialsProvider())
 	    		.withRegion(AWS_REGION)
 	    		.build();
+	}
+
+	private static String generateTemporaryPassword(int length) {
+		StringBuilder stringBuilder = new StringBuilder();
+	    for (int i = 0; i < length; i++) {
+	        stringBuilder.append(chars[new Random().nextInt(chars.length)]);
+	    }
+	    return stringBuilder.toString();
 	}
 }

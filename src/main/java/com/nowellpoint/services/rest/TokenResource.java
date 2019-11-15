@@ -53,7 +53,8 @@ public class TokenResource {
 	@Path("/refresh")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response refresh(@FormParam("refreshToken") String refreshToken) {
+	public Response refresh(
+			@FormParam("refreshToken") String refreshToken) {
 		
 		Token token = null;
 				
@@ -71,7 +72,9 @@ public class TokenResource {
 	@DELETE
 	@Path("/revoke")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response revoke(@FormParam("token") String accessToken) {
+	public Response revoke(
+			@FormParam("token") String accessToken) {
+		
 		identityProviderService.revokeToken(accessToken);
 		return Response.noContent().build();
 	}

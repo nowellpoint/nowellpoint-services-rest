@@ -1,5 +1,7 @@
 package com.nowellpoint.services.rest.model;
 
+import java.time.Instant;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.UriBuilder;
 
@@ -15,7 +17,7 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(toBuilder=true)
 public class User {
 	private @BsonId String id;
 	private String firstName;
@@ -25,6 +27,7 @@ public class User {
 	private String countryCode;
 	private String country;
 	private String timeZone;
+	private Instant lastLoggedIn;
 	
 	@BsonIgnore
 	public Attributes getAttributes() {
@@ -47,7 +50,8 @@ public class User {
 			@BsonProperty("phone") String phone,
 			@BsonProperty("countryCode") String countryCode,
 			@BsonProperty("country") String country,
-			@BsonProperty("timeZone") String timeZone) {
+			@BsonProperty("timeZone") String timeZone,
+			@BsonProperty("lastLoggedIn") Instant lastLoggedIn) {
 		
 		this.id = id;
 		this.firstName = firstName;
@@ -57,5 +61,6 @@ public class User {
 		this.countryCode = countryCode;
 		this.country = country;
 		this.timeZone = timeZone;
+		this.lastLoggedIn = lastLoggedIn;
 	}
 }

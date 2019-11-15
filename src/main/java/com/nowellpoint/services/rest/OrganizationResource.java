@@ -1,8 +1,6 @@
 package com.nowellpoint.services.rest;
 
 import java.net.URI;
-import java.security.Principal;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
@@ -55,15 +53,7 @@ public class OrganizationResource {
 	@RolesAllowed("Administrator")
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getOrganization(@Context SecurityContext context, @PathParam("id") String id) {
-		Principal caller =  context.getUserPrincipal(); 
-		String name = caller == null ? "anonymous" : caller.getName();
-		
-		System.out.println(name);
-		System.out.println(context.isSecure());
-		System.out.println(context.getAuthenticationScheme());
-		System.out.println(groups);
-		
+	public Response getOrganization(@Context SecurityContext context, @PathParam("id") String id) {		
 		Organization organization = orgnizationService.findById(id);
 		if (organization != null) {
 			return Response.ok(organization).build();
