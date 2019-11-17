@@ -8,10 +8,10 @@ import javax.json.bind.annotation.JsonbProperty;
 import lombok.Getter;
 
 @Getter
-public class Keys {
-	@JsonbProperty(value="keys") private List<Key> keys;
+public class JWKSet {
+	@JsonbProperty(value="keys") private List<JWK> keys;
 	
-	public Optional<Key> getKey(String keyId) {
+	public Optional<JWK> getKey(String keyId) {
 		return keys.stream().filter(k -> k.getKeyId().equals(keyId)).findFirst();
 	}
 }

@@ -1,6 +1,10 @@
 package com.nowellpoint.services.rest;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
@@ -42,7 +46,7 @@ public class TokenResource {
 			token = identityProviderService.authenticate(username, password);
 		} catch (NotAuthorizedException e) {
 			throw new WebApplicationException(e.getErrorCode() + ": " + e.getErrorMessage(), Status.BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new WebApplicationException(e.getMessage(), Status.INTERNAL_SERVER_ERROR);
 		}
 		
@@ -62,7 +66,7 @@ public class TokenResource {
 			token = identityProviderService.refreshToken(refreshToken);
 		} catch (NotAuthorizedException e) {
 			throw new WebApplicationException(e.getErrorCode() + ": " + e.getErrorMessage(), Status.BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new WebApplicationException(e.getMessage(), Status.INTERNAL_SERVER_ERROR);
 		}
 		

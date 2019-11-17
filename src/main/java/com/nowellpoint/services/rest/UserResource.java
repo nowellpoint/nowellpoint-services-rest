@@ -3,6 +3,7 @@ package com.nowellpoint.services.rest;
 import java.net.URI;
 import java.util.Set;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -15,6 +16,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
 
 import com.nowellpoint.api.service.UserService;
 import com.nowellpoint.client.sforce.OauthException;
@@ -32,8 +36,14 @@ public class UserResource {
 	@Inject
 	Validator validator;
 	
+	@Inject
+	@Claim(standard = Claims.groups)
+	//@Claim("cognito:groups")
+	String groups;
+	
 	@GET
 	@Path("/{id}")
+	@RolesAllowed("Administrator")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("id") String id) {
 		User user = userService.findById(id);

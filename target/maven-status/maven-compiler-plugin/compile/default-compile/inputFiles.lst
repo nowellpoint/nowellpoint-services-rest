@@ -13,7 +13,7 @@
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/model/Attributes.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/api/service/AbstractService.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/model/Organization.java
-/Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/SecurityContextFilter.java
+/Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/LoggingFilter.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/model/Connection.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/TokenResource.java
 /Users/jherson/workspace/nowellpoint-api/src/main/java/com/nowellpoint/services/rest/UserResource.java

@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import com.mongodb.MongoWriteException;
@@ -45,13 +46,13 @@ public class OrganizationResource {
 	JsonWebToken jwt;
 	
 	@Inject
-	//@Claim(standard = Claims.groups)
-	@Claim("cognito:groups")
+	@Claim(standard = Claims.groups)
+	//@Claim("cognito:groups")
 	String groups;
 	
 	@GET
-	@RolesAllowed("Administrator")
 	@Path("/{id}")
+	@RolesAllowed("Administrator")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOrganization(@Context SecurityContext context, @PathParam("id") String id) {		
 		Organization organization = orgnizationService.findById(id);

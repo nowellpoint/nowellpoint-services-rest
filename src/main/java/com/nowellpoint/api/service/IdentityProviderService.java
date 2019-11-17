@@ -2,17 +2,16 @@ package com.nowellpoint.api.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
@@ -54,8 +53,8 @@ import com.amazonaws.services.cognitoidp.model.GlobalSignOutRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import com.nowellpoint.services.rest.model.CreateUserRequest;
-import com.nowellpoint.services.rest.model.Key;
-import com.nowellpoint.services.rest.model.Keys;
+import com.nowellpoint.services.rest.model.JWK;
+import com.nowellpoint.services.rest.model.JWKSet;
 import com.nowellpoint.services.rest.model.Token;
 import com.nowellpoint.services.rest.util.ConfigProperties;
 import com.nowellpoint.services.rest.util.JsonbUtil;
@@ -80,9 +79,9 @@ public class IdentityProviderService {
 	private static String COGNITO_IDP_JWKS_URL;
 	private static String COGNITO_CLIENT_ID;
 	private static String COGNITO_USER_POOL_ID;
-	private static Keys keys;
+	private static JWKSet keys;
 
-	private static char[] chars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'a', 's',
+	private static final char[] chars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'a', 's',
 	        'd', 'f', 'g', 'h', 'j', 'k', 'l', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'A',
 	        'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', '<', '=', '>', '?', '@' };
 	
@@ -112,7 +111,7 @@ public class IdentityProviderService {
 					.execute(get);
 
 			if (response.getStatusLine().getStatusCode() == 200) {
-				keys = JsonbUtil.fromJson(response.getEntity().getContent(), Keys.class); 
+				keys = JsonbUtil.fromJson(response.getEntity().getContent(), JWKSet.class); 
 			} else {
 				logger.error(IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name()));
 			}
@@ -162,7 +161,7 @@ public class IdentityProviderService {
 				.getValue();
 	}
 	
-	public Token authenticate(String username, String password) throws UnsupportedEncodingException {
+	public Token authenticate(String username, String password) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
 		final Map<String, String> authParams = new HashMap<>();
 		authParams.put(USERNAME, username);  
 		authParams.put(PASSWORD, password);
@@ -170,30 +169,23 @@ public class IdentityProviderService {
 		AuthenticationResultType authenticationResult = authenticate(authParams);
 
 		Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
-
-		authenticationEvent.fireAsync(claims.getBody());
 	    
-		try {
-			String accessToken = generateAccessToken(claims);
-			System.out.println(accessToken);
-		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException
-				| IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String accessToken = generateAccessToken(claims);
 		
 	    Token token = Token.builder()
-	    		//.accessToken(accessToken)
-	    		.accessToken(authenticationResult.getAccessToken())
+	    		.id(claims.getBody().getSubject())
+	    		.accessToken(accessToken)
 	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
 	    		.refreshToken(authenticationResult.getRefreshToken())
 	    		.tokenType(authenticationResult.getTokenType())
 				.build();
+	    
+	    authenticationEvent.fireAsync(claims.getBody());
 		
 		return token;
 	}
 	
-	public Token refreshToken(String refreshToken) throws UnsupportedEncodingException {
+	public Token refreshToken(String refreshToken) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
 		final Map<String, String> authParams = new HashMap<>();
 		authParams.put(REFRESH_TOKEN, refreshToken);  
 		
@@ -201,16 +193,10 @@ public class IdentityProviderService {
 
 		Jws<Claims> claims = getClaims(authenticationResult.getAccessToken());
 	    
-	    String accessToken = null;
-		try {
-			accessToken = generateAccessToken(claims);
-		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException
-				| IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    String accessToken = generateAccessToken(claims);
 	    
 	    Token token = Token.builder()
+	    		.id(claims.getBody().getSubject())
 	    		.accessToken(accessToken)
 	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
 	    		.refreshToken(refreshToken)
@@ -302,16 +288,15 @@ public class IdentityProviderService {
 	    return authenticationResultType;
 	}
 	
-	private String generateAccessToken(Jws<Claims> claims) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {	
-		//InputStream is = getClass().getClassLoader().getResourceAsStream("keystore.jks");
-		FileInputStream is = new FileInputStream("/Users/jherson/workspace/nowellpoint-api/keystore.jks");
+	private String generateAccessToken(Jws<Claims> claims) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+		String keyStore = System.getProperty("javax.net.ssl.keyStore");
+		char[] keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword").toCharArray();
+		
+		InputStream is = new FileInputStream(keyStore);
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keystore.load(is, "password".toCharArray());
+        keystore.load(is, keyStorePassword);
 
-        java.security.Key key = keystore.getKey("selfsigned", "password".toCharArray());
-        
-        //Certificate cert = keystore.getCertificate("selfsigned");
-        //PublicKey publicKey = cert.getPublicKey();
+        Key key = keystore.getKey("selfsigned", keyStorePassword);
 	    
 	    return Jwts.builder()
 				.setHeaderParam("kid", claims.getHeader().getKeyId())
@@ -332,7 +317,7 @@ public class IdentityProviderService {
 				.setSigningKeyResolver(new SigningKeyResolverAdapter() {
 					@SuppressWarnings("rawtypes")
 					public java.security.Key resolveSigningKey(JwsHeader jwsHeader, Claims claims) {
-						Key key = keys.getKey(jwsHeader.getKeyId()).get();
+						JWK key = keys.getKey(jwsHeader.getKeyId()).get();
 						try {
 							BigInteger modulus = new BigInteger(1, Base64.getUrlDecoder().decode(key.getModulus()));
 							BigInteger exponent = new BigInteger(1, Base64.getUrlDecoder().decode(key.getExponent()));
