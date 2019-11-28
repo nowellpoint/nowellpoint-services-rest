@@ -1,0 +1,5 @@
+buildNative {
+    additionalBuildArgs = [
+            '--initialize-at-run-time=com.nowellpoint.services.rest'
+    ]
+}

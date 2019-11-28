@@ -5,7 +5,7 @@ import javax.json.bind.annotation.JsonbProperty;
 import lombok.Getter;
 
 @Getter
-public class JWK {
+public class JsonWebKey {
 	@JsonbProperty(value="alg") private String algorithm;
 	@JsonbProperty(value="kid") private String keyId;
 	@JsonbProperty(value="kty") private String keyType;

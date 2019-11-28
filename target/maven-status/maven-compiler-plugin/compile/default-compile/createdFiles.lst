@@ -4,7 +4,6 @@ com/nowellpoint/services/rest/model/Attributes.class
 com/nowellpoint/services/rest/DatabaseConnectionHealthCheck.class
 com/nowellpoint/services/rest/util/SecretsConfig.class
 com/nowellpoint/services/rest/OrganizationResource.class
-com/nowellpoint/services/rest/model/Key.class
 com/nowellpoint/services/rest/util/JsonbUtil$2.class
 com/nowellpoint/services/rest/error/SalesforceClientExceptionMapper.class
 com/nowellpoint/services/rest/model/Connection$ConnectionBuilder.class
@@ -13,6 +12,8 @@ com/nowellpoint/api/service/IdentityProviderService$1.class
 com/nowellpoint/services/rest/error/MongoWriteExceptionMapper.class
 com/nowellpoint/api/service/OrganizationService.class
 com/nowellpoint/services/rest/model/Address$AddressBuilder.class
+com/nowellpoint/services/rest/LoggingFilter.class
+com/nowellpoint/services/rest/model/JsonWebKeys.class
 com/nowellpoint/services/rest/model/CreateResponse.class
 com/nowellpoint/api/service/AbstractService.class
 com/nowellpoint/services/rest/JaxRsActivator.class
@@ -27,9 +28,9 @@ com/nowellpoint/services/rest/model/User.class
 com/nowellpoint/services/rest/model/Attributes$AttributesBuilder.class
 com/nowellpoint/services/rest/TokenResource.class
 com/nowellpoint/services/rest/model/User$UserBuilder.class
+com/nowellpoint/services/rest/model/JsonWebKey.class
 com/nowellpoint/services/rest/model/Token.class
 com/nowellpoint/api/service/IdentityProviderService.class
-com/nowellpoint/services/rest/model/Keys.class
 com/nowellpoint/services/rest/util/JsonbUtil$1.class
 com/nowellpoint/services/rest/model/CreateUserRequest.class
 com/nowellpoint/services/rest/error/WebApplicationExceptionMapper.class

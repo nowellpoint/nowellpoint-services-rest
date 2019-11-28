@@ -39,11 +39,11 @@
 
 	<properties>
 		<lombok.version>1.18.10</lombok.version>
-		<surefire-plugin.version>2.22.0</surefire-plugin.version>
+		<surefire-plugin.version>2.22.1</surefire-plugin.version>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<aws.version>1.11.628</aws.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<quarkus.version>1.0.0.CR1</quarkus.version>
+		<quarkus.version>1.0.0.Final</quarkus.version>
 		<jjwt.version>0.9.1</jjwt.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -85,6 +85,10 @@
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-kubernetes</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -155,7 +159,18 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>fabric8-maven-plugin</artifactId>
-						<version>3.5.42</version>
+						<version>4.3.1</version>
+						<configuration>
+							<images>
+								<image>
+									<name>nowellpoint/nowellpoint-rest-services:jvm</name>
+									<build>
+										<contextDir>${project.basedir}</contextDir>
+										<dockerFile>src/main/docker/Dockerfile.jvm</dockerFile>
+									</build>
+								</image>
+							</images>
+						</configuration>
 						<executions>
 							<execution>
 								<goals>
@@ -170,6 +185,10 @@
 		</profile>
 		<profile>
 			<id>native</id>
+			<properties>
+				<quarkus.package.type>native</quarkus.package.type>
+				<quarkus.native.additional-build-args>--initialize-at-build-time=com.amazonaws.http.IdleConnectionReaper</quarkus.native.additional-build-args>
+			</properties>
 			<activation>
 				<property>
 					<name>native</name>
