@@ -21,11 +21,12 @@ import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
 
 import com.nowellpoint.api.service.UserService;
-import com.nowellpoint.client.sforce.OauthException;
-import com.nowellpoint.http.Status;
 import com.nowellpoint.services.rest.model.CreateResponse;
 import com.nowellpoint.services.rest.model.CreateUserRequest;
+import com.nowellpoint.services.rest.model.ServiceException;
 import com.nowellpoint.services.rest.model.User;
+
+import static javax.ws.rs.core.Response.Status;
 
 @Path("/users")
 public class UserResource {
@@ -66,8 +67,8 @@ public class UserResource {
     		User user = null;
         	try {
         		user = userService.create(request);
-        	} catch (OauthException e) {
-        		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
+        	} catch (ServiceException e) {
+        		throw new WebApplicationException(e.getMessage(), Status.FORBIDDEN);
         	}
         	
             return Response.created(URI.create(user.getAttributes().getHref()))

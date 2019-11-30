@@ -21,8 +21,9 @@ import javax.ws.rs.core.Response;
 
 import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
 import com.nowellpoint.api.service.IdentityProviderService;
-import com.nowellpoint.http.Status;
 import com.nowellpoint.services.rest.model.Token;
+
+import static javax.ws.rs.core.Response.Status;
 
 @Path("/oauth2")
 @RequestScoped

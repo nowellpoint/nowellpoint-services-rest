@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.security.cert.Certificate;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyStore;
@@ -14,6 +13,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -22,7 +22,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -30,7 +29,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import org.apache.commons.io.IOUtils;
@@ -42,19 +40,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.eclipse.microprofile.config.Config;
 import org.jboss.logging.Logger;
 
-import com.nowellpoint.services.rest.model.CreateUserRequest;
-import com.nowellpoint.services.rest.model.JsonWebKey;
-import com.nowellpoint.services.rest.model.JsonWebKeys;
-import com.nowellpoint.services.rest.model.Token;
-import com.nowellpoint.services.rest.util.ConfigProperties;
-import com.nowellpoint.services.rest.util.JsonbUtil;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SigningKeyResolverAdapter;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
@@ -72,6 +57,19 @@ import com.amazonaws.services.cognitoidp.model.DeliveryMediumType;
 import com.amazonaws.services.cognitoidp.model.GlobalSignOutRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
+import com.nowellpoint.services.rest.model.CreateUserRequest;
+import com.nowellpoint.services.rest.model.JsonWebKey;
+import com.nowellpoint.services.rest.model.JsonWebKeys;
+import com.nowellpoint.services.rest.model.Token;
+import com.nowellpoint.services.rest.util.ConfigProperties;
+import com.nowellpoint.services.rest.util.JsonbUtil;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SigningKeyResolverAdapter;
 
 @ApplicationScoped
 public class IdentityProviderService {

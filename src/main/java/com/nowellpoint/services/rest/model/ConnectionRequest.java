@@ -6,16 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class ConnectionRequest {
-	
-	@NotEmpty
-	private String clientId;
-	
-	@NotEmpty
-	private String clientSecret;
-	
-	@NotEmpty
-	private String username;
-	
-	@NotEmpty
-	private String password;
+	@NotEmpty private String clientId;
+	@NotEmpty private String clientSecret;
+	@NotEmpty private String username;
+	@NotEmpty private String password;
 }

@@ -21,4 +21,6 @@ public class ConfigProperties {
 	
 	public static final String COGNITO_CLIENT_ID = "congnito.client.id";
 	public static final String COGNITO_USER_POOL_ID = "cognito.user.pool.id";	
+	public static final String SALESFORCE_CLIENT_ID = "salesforce.client.id";
+	public static final String SALESFORCE_CLIENT_SECRET = "salesforce.client.secret";
 }

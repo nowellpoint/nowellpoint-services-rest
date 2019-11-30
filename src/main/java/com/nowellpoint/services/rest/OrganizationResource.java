@@ -26,11 +26,12 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import com.mongodb.MongoWriteException;
 import com.nowellpoint.api.service.OrganizationService;
-import com.nowellpoint.client.sforce.OauthException;
-import com.nowellpoint.http.Status;
 import com.nowellpoint.services.rest.model.ConnectionRequest;
 import com.nowellpoint.services.rest.model.CreateResponse;
 import com.nowellpoint.services.rest.model.Organization;
+import com.nowellpoint.services.rest.model.ServiceException;
+
+import static javax.ws.rs.core.Response.Status;
 
 @Path("/organizations")
 @RequestScoped
@@ -47,7 +48,6 @@ public class OrganizationResource {
 	
 	@Inject
 	@Claim(standard = Claims.groups)
-	//@Claim("cognito:groups")
 	String groups;
 	
 	@GET
@@ -76,8 +76,8 @@ public class OrganizationResource {
         	
         	try {
         		organization = orgnizationService.build(request);
-        	} catch (OauthException e) {
-        		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
+        	} catch (ServiceException e) {
+        		throw new WebApplicationException(e.getMessage(), Status.FORBIDDEN);
         	}
         	
             return Response.created(URI.create(organization.getAttributes().getHref()))
@@ -105,8 +105,8 @@ public class OrganizationResource {
         	
         	try {
         		organization = orgnizationService.build(request);
-        	} catch (OauthException e) {
-        		throw new WebApplicationException(e.getError() + ": " + e.getErrorDescription(), Status.FORBIDDEN);
+        	} catch (ServiceException e) {
+        		throw new WebApplicationException(e.getMessage(), Status.FORBIDDEN);
         	} catch (MongoWriteException e) {
         		throw new WebApplicationException(e, Status.BAD_REQUEST);
         	}
@@ -116,7 +116,7 @@ public class OrganizationResource {
             		.build();
     	} else {
     		
-    		return Response.status(Status.BAD_REQUEST)
+    		return Response.status(Response.Status.BAD_REQUEST)
             		.entity(new CreateResponse(violations))
             		.build();
     	}

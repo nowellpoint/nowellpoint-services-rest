@@ -3,26 +3,30 @@ package com.nowellpoint.api.service;
 import java.time.Instant;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 import org.bson.Document;
+import org.eclipse.microprofile.config.Config;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
-import com.nowellpoint.client.sforce.Authenticators;
-import com.nowellpoint.client.sforce.OauthAuthenticationResponse;
-import com.nowellpoint.client.sforce.OauthRequests;
-import com.nowellpoint.client.sforce.Salesforce;
-import com.nowellpoint.client.sforce.SalesforceClientBuilder;
-import com.nowellpoint.client.sforce.UsernamePasswordGrantRequest;
-import com.nowellpoint.client.sforce.model.Token;
 import com.nowellpoint.services.rest.model.Address;
 import com.nowellpoint.services.rest.model.Connection;
 import com.nowellpoint.services.rest.model.ConnectionRequest;
+import com.nowellpoint.services.rest.model.ConnectionResult;
 import com.nowellpoint.services.rest.model.Organization;
-import com.nowellpoint.util.SecureValue;
+import com.nowellpoint.services.rest.model.ServiceException;
+import com.nowellpoint.services.rest.util.ConfigProperties;
+import com.nowellpoint.services.rest.util.SecureValue;
 
 @RequestScoped
 public class OrganizationService extends AbstractService {
+	
+	@Inject
+	Config config;
+	
+	@Inject
+	SalesforceService salesforceService;
 	
 	public OrganizationService() {
 		
@@ -34,62 +38,57 @@ public class OrganizationService extends AbstractService {
 	
 	public Organization build(ConnectionRequest request) {
 		
-		UsernamePasswordGrantRequest authRequest = OauthRequests.PASSWORD_GRANT_REQUEST.builder()
-				.setClientId(request.getClientId())
-				.setClientSecret(request.getClientSecret())
-				.setUsername(request.getUsername())
-				.setPassword(request.getPassword())
-				.build();
+		ConnectionResult connectionResult = salesforceService.connect(request);
 		
-		OauthAuthenticationResponse response = Authenticators.PASSWORD_GRANT_AUTHENTICATOR
-				.authenticate(authRequest);
-		
-		Token token = response.getToken();
-		
-		String connectionString = SecureValue.encryptBase64(new StringBuilder().append(request.getUsername())
-				.append("|")
-				.append(request.getPassword())
-				.append("|")
-				.append(request.getClientId())
-				.append("|")
-				.append(request.getClientSecret())
-				.toString());
-		
-		Salesforce client = SalesforceClientBuilder.defaultClient(token);
-		
-		Organization instance = find(client.getOrganization().getId());
-		
-		Address address = Address.builder()
-				.city(client.getOrganization().getAddress().getCity())
-				.country(client.getOrganization().getAddress().getCountry())
-				.countryCode(client.getOrganization().getAddress().getCountryCode())
-				.postalCode(client.getOrganization().getAddress().getPostalCode())
-				.state(client.getOrganization().getAddress().getState())
-				.stateCode(client.getOrganization().getAddress().getStateCode())
-				.street(client.getOrganization().getAddress().getStreet())
-				.build();
-		
-		Connection connection = Connection.builder()
-				.connectedAs(client.getIdentity().getUsername())
-				.connectedOn(Instant.now())
-				.connectionString(connectionString)
-				.identity(token.getId())
-				.instance(token.getInstanceUrl())
-				.build();
-		
-		Organization organization = Organization.builder()
-				.connection(connection)
-				.organizationType(client.getOrganization().getOrganizationType())
-    			.id(client.getOrganization().getId())
-    			.address(address)
-    			.name(client.getOrganization().getName())
-    			.createdOn(instance != null ? instance.getCreatedOn() : Instant.now())
-    			.updatedOn(Instant.now())
-    			.build();
-		
-		createOrUpdate(organization);
-		
-		return organization;
+		if (connectionResult.isSuccess()) {
+			
+			String key = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
+			
+			String connectionString = SecureValue.encryptBase64(key, new StringBuilder().append(request.getUsername())
+					.append("|")
+					.append(request.getPassword())
+					.append("|")
+					.append(request.getClientId())
+					.append("|")
+					.append(request.getClientSecret())
+					.toString());
+			
+			Organization instance = find(connectionResult.getOrganization().getId());
+			
+			Address address = Address.builder()
+					.city(connectionResult.getOrganization().getAddress().getCity())
+					.country(connectionResult.getOrganization().getAddress().getCountry())
+					.countryCode(connectionResult.getOrganization().getAddress().getCountryCode())
+					.postalCode(connectionResult.getOrganization().getAddress().getPostalCode())
+					.state(connectionResult.getOrganization().getAddress().getState())
+					.stateCode(connectionResult.getOrganization().getAddress().getStateCode())
+					.street(connectionResult.getOrganization().getAddress().getStreet())
+					.build();
+			
+			Connection connection = Connection.builder()
+					.connectedAs(connectionResult.getIdentity().getUsername())
+					.connectedOn(Instant.now())
+					.connectionString(connectionString)
+					.identity(connectionResult.getToken().getId())
+					.instance(connectionResult.getToken().getInstanceUrl())
+					.build();
+			
+			Organization organization = Organization.builder()
+					.connection(connection)
+					.organizationType(connectionResult.getOrganization().getOrganizationType())
+	    			.id(connectionResult.getOrganization().getId())
+	    			.address(address)
+	    			.name(connectionResult.getOrganization().getName())
+	    			.createdOn(instance != null ? instance.getCreatedOn() : Instant.now())
+	    			.updatedOn(Instant.now())
+	    			.build();
+			
+			createOrUpdate(organization);
+			
+			return organization;
+		} else {
+			throw new ServiceException(connectionResult.getErrorMessage());
+		}
 	}
 	
 	public Organization find(String id) {
