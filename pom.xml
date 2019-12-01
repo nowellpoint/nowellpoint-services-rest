@@ -188,13 +188,8 @@
 			<id>native</id>
 			<properties>
 				<quarkus.package.type>native</quarkus.package.type>
-				<quarkus.native.additional-build-args>--initialize-at-build-time=com.amazonaws.http.IdleConnectionReaper</quarkus.native.additional-build-args>
 			</properties>
-			<activation>
-				<property>
-					<name>native</name>
-				</property>
-			</activation>
+			
 			<build>
 				<plugins>
 					<plugin>

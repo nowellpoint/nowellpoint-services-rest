@@ -19,7 +19,7 @@ public class SecretsConfig implements ConfigSource {
 	private static final String NAME = "AWSSecretsManager";
 	private static Map<String,String> PROPERTIES = new HashMap<>();
 	
-	public SecretsConfig() {
+	static {
 		AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
     			.withRegion(System.getenv("AWS_REGION"))
     			.withCredentials(new EnvironmentVariableCredentialsProvider())
