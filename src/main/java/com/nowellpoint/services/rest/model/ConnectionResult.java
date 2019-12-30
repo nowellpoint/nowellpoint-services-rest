@@ -11,6 +11,8 @@ import lombok.Getter;
 @Getter
 public class ConnectionResult {
 	@Builder.Default private boolean success = Boolean.TRUE;
+	private String connectionId;
+	private String authEndpoint;
 	private Token token;
 	private Identity identity;
 	private Organization organization;

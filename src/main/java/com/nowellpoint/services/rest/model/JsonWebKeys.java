@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import javax.json.bind.annotation.JsonbProperty;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
+@RegisterForReflection
 public class JsonWebKeys {
 	@JsonbProperty(value="keys") private List<JsonWebKey> keys;
 	

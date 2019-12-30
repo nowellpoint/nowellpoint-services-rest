@@ -1,27 +1,35 @@
 package com.nowellpoint.services.rest.model;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
 
 @Getter
-public class CreateUserRequest {
+public class RegistrationRequest {
 	
-	@Email
+	@Email 
 	private String email;
 	
-	private String firstName;
+	private String givenName;
 	
-	@NotEmpty
-	private String lastName;
+	@NotEmpty 
+	private String familyName;
 	
-	@NotEmpty
 	private String phone;
 	
-	@NotEmpty
+	@NotEmpty 
 	private String countryCode;
 	
 	@NotEmpty(message="A valid time zone must be provided. Valid time zones at this time are: America/New_York")
-	private String timeZone;
+	private String timeZone = TimeZone.getDefault().getID();
+	
+	@NotEmpty
+	private String companyName;
+	
+	@NotEmpty
+	private String locale = Locale.getDefault().toString();
 }

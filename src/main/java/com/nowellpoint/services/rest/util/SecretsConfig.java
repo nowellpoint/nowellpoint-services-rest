@@ -7,6 +7,8 @@ import javax.json.bind.JsonbBuilder;
 
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 //import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
@@ -19,16 +21,21 @@ public class SecretsConfig implements ConfigSource {
 	private static final String NAME = "AWSSecretsManager";
 	private static Map<String,String> PROPERTIES = new HashMap<>();
 	
-	static {
-//		AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
-//    			.withRegion(System.getenv("AWS_REGION"))
-//    			.withCredentials(new EnvironmentVariableCredentialsProvider())
-//    			.build();
+	public SecretsConfig() {
 		
-		AWSSecretsManager client = AWSSecretsManagerClientBuilder.defaultClient();
+		String accessKey = System.getProperty("aws.access.key") != null ? System.getProperty("aws.access.key") : System.getenv("AWS_ACCESS_KEY");
+		String secretAccessKey = System.getProperty("aws.secret.access.key") != null ? System.getProperty("aws.secret.access.key") : System.getenv("AWS_SECRET_ACCESS_KEY");
+		String region = System.getProperty("aws.region") != null ? System.getProperty("aws.region") : System.getenv("AWS_REGION");
+		String secretId = System.getProperty("aws.secret.id") != null ? System.getProperty("aws.secret.id"): System.getenv("AWS_SECRET_NAME");
+		
+		BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretAccessKey);
+		
+		AWSSecretsManager client = AWSSecretsManagerClientBuilder.standard()
+    			.withRegion(region)
+    			.withCredentials(new AWSStaticCredentialsProvider(credentials))
+    			.build();
 
-        GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest().withSecretId(
-        		System.getProperty("secret.name") != null ? System.getProperty("secret.name"): System.getenv("AWS_SECRET_NAME"));
+        GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest().withSecretId(secretId);
 
         GetSecretValueResult getSecretValueResult = client.getSecretValue(getSecretValueRequest);
         

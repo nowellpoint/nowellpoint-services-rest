@@ -1,18 +1,20 @@
 package com.nowellpoint.services.rest.model.sforce;
 
-import javax.json.bind.annotation.JsonbProperty;
+import com.nowellpoint.services.rest.model.sforce.annotation.Column;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
+@RegisterForReflection
 public class Address {
-	@JsonbProperty(value="street") private String street;
-	@JsonbProperty(value="city") private String city;
-	@JsonbProperty(value="state") private String state;
-	@JsonbProperty(value="stateCode") private String stateCode;
-	@JsonbProperty(value="country") private String country;
-	@JsonbProperty(value="countryCode") private String countryCode;
-	@JsonbProperty(value="postalCode") private String postalCode;
-	@JsonbProperty(value="longitude") private Double longitude;
-	@JsonbProperty(value="latitude") private Double latitude;
+	@Column(value="street") private String street;
+	@Column(value="city") private String city;
+	@Column(value="state") private String state;
+	@Column(value="stateCode") private String stateCode;
+	@Column(value="country") private String country;
+	@Column(value="countryCode") private String countryCode;
+	@Column(value="postalCode") private String postalCode;
+	@Column(value="longitude") private Double longitude;
+	@Column(value="latitude") private Double latitude;
 }

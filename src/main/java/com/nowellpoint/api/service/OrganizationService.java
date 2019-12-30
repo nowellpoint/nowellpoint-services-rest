@@ -1,6 +1,7 @@
 package com.nowellpoint.api.service;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,13 +12,9 @@ import org.eclipse.microprofile.config.Config;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.nowellpoint.services.rest.model.Address;
-import com.nowellpoint.services.rest.model.Connection;
-import com.nowellpoint.services.rest.model.ConnectionRequest;
-import com.nowellpoint.services.rest.model.ConnectionResult;
 import com.nowellpoint.services.rest.model.Organization;
-import com.nowellpoint.services.rest.model.ServiceException;
-import com.nowellpoint.services.rest.util.ConfigProperties;
-import com.nowellpoint.services.rest.util.SecureValue;
+import com.nowellpoint.services.rest.model.OrganizationRequest;
+import com.nowellpoint.services.rest.model.Subscription;
 
 @RequestScoped
 public class OrganizationService extends AbstractService {
@@ -36,65 +33,56 @@ public class OrganizationService extends AbstractService {
 		return getCollection().find(new Document("_id", id)).first();
 	}
 	
-	public Organization build(ConnectionRequest request) {
+	public Organization create(OrganizationRequest organizationRequest) {
 		
-		ConnectionResult connectionResult = salesforceService.connect(request);
+		Address address = Address.builder()
+				.countryCode(organizationRequest.getCountryCode())
+				.build();
 		
-		if (connectionResult.isSuccess()) {
-			
-			String key = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
-			
-			String connectionString = SecureValue.encryptBase64(key, new StringBuilder().append(request.getUsername())
-					.append("|")
-					.append(request.getPassword())
-					.append("|")
-					.append(request.getClientId())
-					.append("|")
-					.append(request.getClientSecret())
-					.toString());
-			
-			Organization instance = find(connectionResult.getOrganization().getId());
-			
-			Address address = Address.builder()
-					.city(connectionResult.getOrganization().getAddress().getCity())
-					.country(connectionResult.getOrganization().getAddress().getCountry())
-					.countryCode(connectionResult.getOrganization().getAddress().getCountryCode())
-					.postalCode(connectionResult.getOrganization().getAddress().getPostalCode())
-					.state(connectionResult.getOrganization().getAddress().getState())
-					.stateCode(connectionResult.getOrganization().getAddress().getStateCode())
-					.street(connectionResult.getOrganization().getAddress().getStreet())
-					.build();
-			
-			Connection connection = Connection.builder()
-					.connectedAs(connectionResult.getIdentity().getUsername())
-					.connectedOn(Instant.now())
-					.connectionString(connectionString)
-					.identity(connectionResult.getToken().getId())
-					.instance(connectionResult.getToken().getInstanceUrl())
-					.build();
-			
-			Organization organization = Organization.builder()
-					.connection(connection)
-					.organizationType(connectionResult.getOrganization().getOrganizationType())
-	    			.id(connectionResult.getOrganization().getId())
-	    			.address(address)
-	    			.name(connectionResult.getOrganization().getName())
-	    			.createdOn(instance != null ? instance.getCreatedOn() : Instant.now())
-	    			.updatedOn(Instant.now())
-	    			.build();
-			
-			createOrUpdate(organization);
-			
-			return organization;
-		} else {
-			throw new ServiceException(connectionResult.getErrorMessage());
-		}
+		Subscription subscription = Subscription.builder()
+				.name("Free")
+				.planId("FREE")
+				.price(Double.valueOf(0.00))
+				.build();
+		
+		Organization organization = Organization.builder()
+				.organizationType("Developer Edition")
+    			.id(UUID.randomUUID().toString())
+    			.address(address)
+    			.subscription(subscription)
+    			.name(organizationRequest.getName())
+    			.createdOn(Instant.now())
+    			.updatedOn(Instant.now())
+    			.build();
+		
+		createOrUpdate(organization);
+		
+		return organization;
 	}
 	
-	public Organization find(String id) {
-		return getCollection().find(new Document("_id", id)).first();
+	public Organization update(String id, OrganizationRequest organizationRequest) {
+		
+		Organization instance = findById(id);
+		
+		Address address = instance.getAddress().toBuilder()
+				.countryCode(organizationRequest.getCountryCode())
+				.locality(organizationRequest.getLocality())
+				.postalCode(organizationRequest.getPostalCode())
+				.region(organizationRequest.getRegion())
+				.street(organizationRequest.getStreet())
+				.build();
+		
+		Organization organization = instance.toBuilder()
+				.address(address)
+				.name(organizationRequest.getName())
+				.updatedOn(Instant.now())
+				.build();
+		
+		createOrUpdate(organization);
+		
+		return organization;
 	}
-	
+
 	private void createOrUpdate(Organization organization) {
 		getCollection().findOneAndReplace(new Document("_id", organization.getId()), organization, new FindOneAndReplaceOptions().upsert(Boolean.TRUE));
 	}

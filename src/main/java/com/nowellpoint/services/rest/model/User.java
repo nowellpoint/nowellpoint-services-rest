@@ -13,21 +13,31 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import com.nowellpoint.services.rest.JaxRsActivator;
 import com.nowellpoint.services.rest.UserResource;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder(toBuilder=true)
+@RegisterForReflection
 public class User {
 	private @BsonId String id;
 	private String firstName;
 	private String lastName;
 	private String email;
+	private Boolean emailVerified;
+	private String username;
 	private String phone;
-	private String countryCode;
-	private String country;
 	private String timeZone;
+	private String locale;
 	private Instant lastLoggedIn;
+	private Instant createdOn;
+	private Instant updatedOn;
+	private String organizationId;
+	
+	public String getName() {
+		return firstName != null ? firstName.concat(" ").concat(lastName) : lastName;
+	}
 	
 	@BsonIgnore
 	public Attributes getAttributes() {
@@ -47,20 +57,28 @@ public class User {
 			@BsonProperty("firstName") String firstName, 
 			@BsonProperty("lastName") String lastName, 
 			@BsonProperty("email") String email,
+			@BsonProperty("emailVerified") Boolean emailVerified,
+			@BsonProperty("username") String username,
 			@BsonProperty("phone") String phone,
-			@BsonProperty("countryCode") String countryCode,
-			@BsonProperty("country") String country,
 			@BsonProperty("timeZone") String timeZone,
-			@BsonProperty("lastLoggedIn") Instant lastLoggedIn) {
+			@BsonProperty("locale") String locale,
+			@BsonProperty("lastLoggedIn") Instant lastLoggedIn,
+			@BsonProperty("createdOn") Instant createdOn,
+			@BsonProperty("updatedOn") Instant updatedOn,
+			@BsonProperty("organizationId") String organizationId) {
 		
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.emailVerified = emailVerified;
+		this.username = username;
 		this.phone = phone;
-		this.countryCode = countryCode;
-		this.country = country;
 		this.timeZone = timeZone;
+		this.locale = locale;
 		this.lastLoggedIn = lastLoggedIn;
+		this.createdOn = createdOn;
+		this.updatedOn = updatedOn;
+		this.organizationId = organizationId;
 	}
 }

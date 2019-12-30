@@ -7,17 +7,17 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/nowellpoint-api-jvm .
+# docker build -f src/main/docker/Dockerfile.jvm -t nowellpoint/nowellpoint-services-rest .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/nowellpoint-api-jvm
+# docker run -i --rm -p 8080:8080 nowellpoint/nowellpoint-services-rest
 #
 ###
 FROM fabric8/java-alpine-openjdk8-jre
+#FROM amazoncorretto
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.keyStore=/deployments/keystore.jks"
 ENV AB_ENABLED=jmx_exporter
 COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/app.jar
-COPY target/keystore.jks /deployments
 ENTRYPOINT [ "/deployments/run-java.sh" ]

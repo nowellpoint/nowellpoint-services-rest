@@ -54,8 +54,12 @@ public class JsonbUtil implements JsonbConfigCustomizer {
 			
 			@Override
 			public boolean isVisible(Method method) {
-				return false;
+				return true;
 			}
 		});	
+	}
+	
+	public static String toJson(Object object) {
+		return jsonb.toJson(object);
 	}
 }

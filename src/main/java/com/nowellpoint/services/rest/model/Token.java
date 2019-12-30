@@ -2,11 +2,13 @@ package com.nowellpoint.services.rest.model;
 
 import javax.json.bind.annotation.JsonbProperty;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@RegisterForReflection
 public class Token {
 	@JsonbProperty(value="id") private String id;
 	@JsonbProperty(value="environment_url") private String environmentUrl;

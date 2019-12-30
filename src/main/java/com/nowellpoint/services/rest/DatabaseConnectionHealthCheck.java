@@ -17,19 +17,20 @@ public class DatabaseConnectionHealthCheck implements HealthCheck {
 	@Inject 
 	protected MongoClient mongoClient;
 	
-
 	@Override
 	public HealthCheckResponse call() {
-		
-		HealthCheckResponseBuilder responseBuilder = HealthCheckResponse.named("Database connection health check");
-
+		HealthCheckResponseBuilder builder = HealthCheckResponse.named("MongoDB connection health check").up();
         try {
-        	mongoClient.listDatabaseNames();
-            responseBuilder.up();
+            StringBuilder databases = new StringBuilder();
+            for (String db : mongoClient.listDatabaseNames()) {
+                if (databases.length() != 0) {
+                    databases.append(", ");
+                }
+                databases.append(db);
+            }
+            return builder.withData("databases", databases.toString()).build();
         } catch (Exception e) {
-            responseBuilder.down();
-        }
-
-        return responseBuilder.build();
+            return builder.down().withData("reason", e.getMessage()).build();
+        }    
 	}
 }

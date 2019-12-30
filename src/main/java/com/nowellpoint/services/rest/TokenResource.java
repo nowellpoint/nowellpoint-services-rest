@@ -16,6 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -51,7 +52,13 @@ public class TokenResource {
 			throw new WebApplicationException(e.getMessage(), Status.INTERNAL_SERVER_ERROR);
 		}
 		
-		return Response.ok(token).build();
+		CacheControl cacheControl = new CacheControl();
+		cacheControl.setNoStore(Boolean.TRUE);
+		
+		return Response.ok(token)
+				.cacheControl(cacheControl)
+				.header("Pragma", "no-cache")
+				.build();
 	}
 	
 	@POST
@@ -71,7 +78,13 @@ public class TokenResource {
 			throw new WebApplicationException(e.getMessage(), Status.INTERNAL_SERVER_ERROR);
 		}
 		
-		return Response.ok(token).build();
+		CacheControl cacheControl = new CacheControl();
+		cacheControl.setNoStore(Boolean.TRUE);
+		
+		return Response.ok(token)
+				.cacheControl(cacheControl)
+				.header("Pragma", "no-cache")
+				.build();
 	}
 	
 	@DELETE

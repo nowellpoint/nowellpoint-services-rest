@@ -11,7 +11,7 @@ import org.jboss.logging.Logger;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
-import com.nowellpoint.services.rest.model.CreateUserRequest;
+import com.nowellpoint.services.rest.model.UserRequest;
 import com.nowellpoint.services.rest.model.User;
 
 import io.jsonwebtoken.Claims;
@@ -29,19 +29,43 @@ public class UserService extends AbstractService {
 		return getCollection().find(new Document("_id", id)).first();
 	}
 	
-	public User create(CreateUserRequest request) {
+	public User create(String organizationId, UserRequest request) {
 		
 		String subject = identityProviderService.createUser(request);
 		
 		User user = User.builder()
 				.id(subject)
-				.country("United States")
-				.countryCode(request.getCountryCode())
+				.email(request.getEmail())
+				.emailVerified(Boolean.FALSE)
+				.firstName(request.getFirstName())
+				.lastName(request.getLastName())
+				.organizationId(organizationId)
+				.phone(request.getPhone())
+				.timeZone(request.getTimeZone())
+				.createdOn(Instant.now())
+				.updatedOn(Instant.now())
+				.username(request.getEmail())
+				.locale(request.getLocale())
+				.build();
+		
+		createOrUpdate(user);
+		
+		return user;
+	}
+	
+	public User update(String id, UserRequest request) {
+		
+		User instance = findById(id);
+		
+		User user = instance.toBuilder()
 				.email(request.getEmail())
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
 				.phone(request.getPhone())
 				.timeZone(request.getTimeZone())
+				.updatedOn(Instant.now())
+				.locale(request.getLocale())
+				.username(request.getEmail())
 				.build();
 		
 		createOrUpdate(user);
@@ -58,7 +82,7 @@ public class UserService extends AbstractService {
 	}
 	
 	public void authenticationEventListener(@ObservesAsync Claims claims) {
-		logger.info("******* observed authentication event: " + claims.getSubject() + " *******");
+		logger.debug("******* observed authentication event: " + claims.getSubject() + " *******");
 		User user = findById(claims.getSubject());
 		createOrUpdate(user.toBuilder()
 				.lastLoggedIn(Instant.now())

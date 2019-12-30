@@ -30,6 +30,8 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +42,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.eclipse.microprofile.config.Config;
 import org.jboss.logging.Logger;
 
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
 import com.amazonaws.services.cognitoidp.model.AdminCreateUserRequest;
@@ -57,9 +61,11 @@ import com.amazonaws.services.cognitoidp.model.DeliveryMediumType;
 import com.amazonaws.services.cognitoidp.model.GlobalSignOutRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
-import com.nowellpoint.services.rest.model.CreateUserRequest;
+import com.nowellpoint.services.rest.IdentityResource;
+import com.nowellpoint.services.rest.JaxRsActivator;
 import com.nowellpoint.services.rest.model.JsonWebKey;
 import com.nowellpoint.services.rest.model.JsonWebKeys;
+import com.nowellpoint.services.rest.model.UserRequest;
 import com.nowellpoint.services.rest.model.Token;
 import com.nowellpoint.services.rest.util.ConfigProperties;
 import com.nowellpoint.services.rest.util.JsonbUtil;
@@ -80,6 +86,8 @@ public class IdentityProviderService {
 	private static final String NEW_PASSWORD_REQUIRED     = "NEW_PASSWORD_REQUIRED";
 	private static final String REFRESH_TOKEN             = "REFRESH_TOKEN";
 	
+	private static String AWS_ACCESS_KEY;
+	private static String AWS_SECRET_ACCESS_KEY;
 	private static String AWS_REGION;
 	private static String COGNITO_IDP_JWKS_URL;
 	private static String COGNITO_CLIENT_ID;
@@ -99,9 +107,14 @@ public class IdentityProviderService {
 	@Inject
 	Event<Claims> authenticationEvent; 
 	
+	@Inject
+	UserService userService;
+	
 	@PostConstruct
 	public void init() {
 		
+		AWS_ACCESS_KEY               = config.getValue(ConfigProperties.AWS_ACCESS_KEY, String.class);
+		AWS_SECRET_ACCESS_KEY        = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
 		AWS_REGION                   = config.getValue(ConfigProperties.AWS_REGION, String.class);
 		COGNITO_IDP_JWKS_URL         = config.getValue(ConfigProperties.COGNITO_IDP_JWKS_URL, String.class);
 		COGNITO_CLIENT_ID            = config.getValue(ConfigProperties.COGNITO_CLIENT_ID, String.class);
@@ -126,7 +139,11 @@ public class IdentityProviderService {
 		}
 	}
 	
-	public String createUser(CreateUserRequest request) {
+	/**
+	 * @param request
+	 * @return
+	 */
+	public String createUser(UserRequest request) {
 		AWSCognitoIdentityProvider cognitoClient = getCognitoIdentityClient();
 		AdminCreateUserRequest cognitoRequest = new AdminCreateUserRequest()
 		       .withUserPoolId(COGNITO_USER_POOL_ID)
@@ -141,16 +158,16 @@ public class IdentityProviderService {
 		              new AttributeType()
 		              .withName("family_name")
 		              .withValue(request.getLastName()),
-		              new AttributeType()
-		              .withName("phone_number")
-		              .withValue("+1".concat(request.getPhone())),
+		            //  new AttributeType()
+		            //  .withName("phone_number")
+		           //   .withValue("+1".concat(request.getPhone())),
 		              new AttributeType()
 		              .withName("zoneinfo")
 		              .withValue(request.getTimeZone()),
 		              new AttributeType()
 		              .withName("email_verified")
 		              .withValue("false"))
-		              .withTemporaryPassword(generateTemporaryPassword(8))
+		              .withTemporaryPassword(generateTemporaryPassword(12))
 		              .withMessageAction("SUPPRESS")
 		              .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL)
 		              .withForceAliasCreation(Boolean.FALSE);
@@ -177,8 +194,12 @@ public class IdentityProviderService {
 	    
 		String accessToken = generateAccessToken(claims);
 		
+		String id = UriBuilder.fromPath("http://localhost:8080" + JaxRsActivator.class.getAnnotation(ApplicationPath.class).value()).path(IdentityResource.class)
+				.build()
+				.toString();
+		
 	    Token token = Token.builder()
-	    		.id(claims.getBody().getSubject())
+	    		.id(id)
 	    		.accessToken(accessToken)
 	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
 	    		.refreshToken(authenticationResult.getRefreshToken())
@@ -357,8 +378,9 @@ public class IdentityProviderService {
 	}
 	
 	private AWSCognitoIdentityProvider getCognitoIdentityClient() {
+		AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY));
 	    return AWSCognitoIdentityProviderClientBuilder.standard()
-	    		.withCredentials(new EnvironmentVariableCredentialsProvider())
+	    		.withCredentials(credentialsProvider)
 	    		.withRegion(AWS_REGION)
 	    		.build();
 	}
