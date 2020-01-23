@@ -1,10 +1,7 @@
 package com.nowellpoint.services.rest;
 
-import java.util.Set;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -52,7 +49,7 @@ public class OrganizationResource {
 	//@RolesAllowed("Administrator")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOrganization(@Context SecurityContext context, @PathParam("id") String id) {		
-		Organization organization = orgnizationService.findById(id);
+		var organization = orgnizationService.findById(id);
 		if (organization != null) {
 			return Response.ok(organization).build();
 		} else {
@@ -65,7 +62,7 @@ public class OrganizationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateOrganization(@Context SecurityContext context, @PathParam("id") String id, OrganizationRequest request) {
-    	Set<ConstraintViolation<OrganizationRequest>> violations = validator.validate(request);
+    	var violations = validator.validate(request);
     	if (violations.isEmpty()) {
     		Organization organization = null;
         	try {

@@ -1,7 +1,5 @@
 package com.nowellpoint.services.rest;
 
-import java.util.Optional;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -15,9 +13,7 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import com.nowellpoint.api.service.AccountService;
-import com.nowellpoint.api.service.ConnectionService;
-import com.nowellpoint.services.rest.model.Connection;
-import com.nowellpoint.services.rest.model.sforce.Account;
+import com.nowellpoint.api.service.OrganizationService;
 
 @Path("{connectionId}/accounts")
 @RequestScoped
@@ -27,7 +23,7 @@ public class AccountResource extends AbstractResource {
 	AccountService accountService;
 	
 	@Inject
-	ConnectionService connectionService;
+	OrganizationService organizationService;
 	
 	@Inject
 	JsonWebToken jwt;
@@ -36,8 +32,8 @@ public class AccountResource extends AbstractResource {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getById(@PathParam("connectionId") String connectionId, @PathParam("id") String id) {
-		Optional<Connection> connection = connectionService.findById(getOrganizationId(jwt), connectionId);
-		Optional<Account> account = accountService.findById(connection.get(), id);
+		var connection = organizationService.getConnection(getOrganizationId(jwt), connectionId);
+		var account = accountService.findById(connection.get(), id);
 		if (account.isPresent()) {
 			return Response.ok(account.get().asJsonObject()).build();
 		} else {

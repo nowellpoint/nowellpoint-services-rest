@@ -27,6 +27,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.microprofile.config.Config;
 import org.jboss.logging.Logger;
 import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
@@ -64,7 +65,7 @@ import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import com.amazonaws.services.cognitoidp.model.MessageActionType;
 import com.nowellpoint.services.rest.IdentityResource;
 import com.nowellpoint.services.rest.JaxRsActivator;
-import com.nowellpoint.services.rest.model.IdentityProviderException;
+import com.nowellpoint.services.rest.model.IdentityProviderServiceException;
 import com.nowellpoint.services.rest.model.LoggedInEvent;
 import com.nowellpoint.services.rest.model.Token;
 import com.nowellpoint.services.rest.model.User;
@@ -169,7 +170,7 @@ public class IdentityProviderService {
 		try {
 			createUserResult = cognitoClient.adminCreateUser(cognitoRequest);
 		} catch (AWSCognitoIdentityProviderException e) {
-			throw new IdentityProviderException(e);
+			throw new IdentityProviderServiceException(e);
 		}
 		
 		return createUserResult.getUser()
@@ -181,62 +182,76 @@ public class IdentityProviderService {
 				.getValue();
 	}
 	
-	public Token authenticate(String username, String password) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, JoseException, InvalidJwtException, MalformedClaimException {
+	public Token authenticate(String username, String password) {
 		final Map<String, String> authParams = new HashMap<>();
 		authParams.put(USERNAME, username);  
 		authParams.put(PASSWORD, password);
 		
-		AuthenticationResultType authenticationResult = authenticate(authParams);
-
-		JwtClaims claims = getClaims(authenticationResult.getAccessToken());
-		
-		User user = userService.findById(claims.getSubject());
-	    
-		String accessToken = generateAccessToken(claims, user.getOrganizationId());
-		
-	    Token token = Token.builder()
-	    		.id(getId())
-	    		.accessToken(accessToken)
-	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
-	    		.refreshToken(authenticationResult.getRefreshToken())
-	    		.tokenType(authenticationResult.getTokenType())
-				.build();
-	    
-	    LoggedInEvent event = LoggedInEvent.builder()
-	    		.audience(user.getOrganizationId())
-	    		.expiration(Instant.ofEpochMilli(claims.getExpirationTime().getValueInMillis()))
-	    		.id(claims.getJwtId())
-	    		.issuedAt(Instant.ofEpochMilli(claims.getIssuedAt().getValueInMillis()))
-	    		.issuer(claims.getIssuer())
-	    		.subject(claims.getSubject())
-	    		.build();
-	    
-	    loggedInEvent.fireAsync(event);
-		
-		return token;
+		try {
+			
+			AuthenticationResultType authenticationResult = authenticate(authParams);
+			
+			JwtClaims claims = getClaims(authenticationResult.getAccessToken());
+			
+			User user = userService.findById(claims.getSubject());
+			
+			String accessToken = generateAccessToken(claims, user.getOrganizationId());
+			
+			Token token = Token.builder()
+					.id(getId())
+					.accessToken(accessToken)
+					.expiresIn(authenticationResult.getExpiresIn().longValue())
+					.refreshToken(authenticationResult.getRefreshToken())
+					.tokenType(authenticationResult.getTokenType())
+					.build();
+			
+			LoggedInEvent event = LoggedInEvent.builder()
+					.audience(user.getOrganizationId())
+					.expiration(Instant.ofEpochMilli(claims.getExpirationTime().getValueInMillis()))
+					.id(claims.getJwtId())
+					.issuedAt(Instant.ofEpochMilli(claims.getIssuedAt().getValueInMillis()))
+					.issuer(claims.getIssuer())
+					.subject(claims.getSubject())
+					.build();
+			
+			loggedInEvent.fireAsync(event);
+			
+			return token;
+			
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | JoseException | InvalidJwtException | MalformedClaimException e) {
+			logger.error(e);
+			throw new IdentityProviderServiceException(500, e.getClass().getSimpleName().toUpperCase(), ExceptionUtils.getStackTrace(e), "authenticate()", e.getMessage());
+		}
 	}
 	
-	public Token refreshToken(String refreshToken) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, JoseException, InvalidJwtException, MalformedClaimException {
+	public Token refreshToken(String refreshToken) {
 		final Map<String, String> authParams = new HashMap<>();
 		authParams.put(REFRESH_TOKEN, refreshToken);  
 		
-		AuthenticationResultType authenticationResult = refreshToken(authParams);
-
-		JwtClaims claims = getClaims(authenticationResult.getAccessToken());
-	    
-		User user = userService.findById(claims.getSubject());
-	    
-		String accessToken = generateAccessToken(claims, user.getOrganizationId());
-	    
-	    Token token = Token.builder()
-	    		.id(getId())
-	    		.accessToken(accessToken)
-	    		.expiresIn(authenticationResult.getExpiresIn().longValue())
-	    		.refreshToken(refreshToken)
-	    		.tokenType(authenticationResult.getTokenType())
-	    		.build();
+		try {
+			
+			AuthenticationResultType authenticationResult = refreshToken(authParams);
+			
+			JwtClaims claims = getClaims(authenticationResult.getAccessToken());
+			
+			User user = userService.findById(claims.getSubject());
+			
+			String accessToken = generateAccessToken(claims, user.getOrganizationId());
+			
+			Token token = Token.builder()
+					.id(getId())
+					.accessToken(accessToken)
+					.expiresIn(authenticationResult.getExpiresIn().longValue())
+					.refreshToken(refreshToken)
+					.tokenType(authenticationResult.getTokenType())
+					.build();
+			
+			return token;
 		
-		return token;
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | JoseException | InvalidJwtException | MalformedClaimException e) {
+			logger.error(e);
+			throw new IdentityProviderServiceException(500, e.getClass().getSimpleName().toUpperCase(), ExceptionUtils.getStackTrace(e), "refreshToken()", e.getMessage());
+		}
 	}
 	
 	public void revokeToken(String accessToken) {
@@ -356,7 +371,7 @@ public class IdentityProviderService {
         jwtClaims.setAudience(audience);
         jwtClaims.setSubject(claims.getSubject());
         jwtClaims.setExpirationTime(claims.getExpirationTime());
-        jwtClaims.setIssuedAtToNow();
+        jwtClaims.setIssuedAt(claims.getIssuedAt());
         jwtClaims.setClaim("groups", claims.getClaimValue("cognito:groups"));
         
         JsonWebSignature jws = new JsonWebSignature();

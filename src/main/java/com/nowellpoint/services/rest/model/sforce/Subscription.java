@@ -61,24 +61,25 @@ public class Subscription extends SObject {
 				.add("startDate", 								startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
 				.add("endDate", 								endDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
 				.add("status", 									getStatus())
+			//	.add("annualRecurringRevenueType",              getAnnualRecurringRevenueType())
 				.add("annualRecurringRevenue", 					getAnnualRecurringRevenue())
-				.add("revisedSubscription", 					revisedSubscription == null ? JsonValue.NULL : addRevisedSubscription())
-				.add("product", 								product == null ? JsonValue.NULL : addProduct())
-				.add("quoteLine", 								quoteLine == null ? JsonValue.NULL : addQuoteLine())
+				.add("revisedSubscription", 					addRevisedSubscription())
+				.add("product", 								addProduct())
+				.add("quoteLine", 								addQuoteLine())
 				.add("revisions", 								revisions == null ? JsonValue.NULL : addRevisions())
 				.build();
 	}
 	
-	private JsonObject addRevisedSubscription() {
-		return getRevisedSubscription().asJsonObject();
+	private JsonValue addRevisedSubscription() {
+		return revisedSubscription == null ? JsonValue.NULL : revisedSubscription.asJsonObject();
 	}
 	
-	private JsonObject addProduct() {
-		return getProduct().asJsonObject();
+	private JsonValue addProduct() {
+		return product == null ? JsonValue.NULL : product.asJsonObject();
 	}
 	
-	private JsonObject addQuoteLine() {
-		return getQuoteLine().asJsonObject();
+	private JsonValue addQuoteLine() {
+		return quoteLine == null ? JsonValue.NULL : quoteLine.asJsonObject();
 	}
 	
 	private JsonArray addRevisions() {
@@ -95,6 +96,16 @@ public class Subscription extends SObject {
 			return "EXPIRED";
 		} else {
 			return "ACTIVE";
+		}
+	}
+	
+	private String getAnnualRecurringRevenueType() {
+		if (quoteLine.getUpgradedSubscription() != null) {
+			return AnnualRecurringRevenueType.INCREMENTAL.name();
+		} else if (quoteLine.getRenewedSubscription() != null) {
+			return AnnualRecurringRevenueType.RENEWAL.name();
+		} else {
+			return AnnualRecurringRevenueType.NEW.name();
 		}
 	}
 	

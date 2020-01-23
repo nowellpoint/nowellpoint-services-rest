@@ -5,18 +5,18 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import com.nowellpoint.services.rest.model.Error;
-import com.nowellpoint.services.rest.model.IdentityProviderException;
+import com.nowellpoint.services.rest.model.IdentityProviderServiceException;
 
 @Provider
-public class IdentityProviderExceptionMapper implements ExceptionMapper<IdentityProviderException> {
+public class IdentityProviderServiceExceptionMapper implements ExceptionMapper<IdentityProviderServiceException> {
 
 	@Override
-	public Response toResponse(IdentityProviderException exception) {
-		return Response.status(Response.Status.BAD_REQUEST)
+	public Response toResponse(IdentityProviderServiceException exception) {
+		return Response.status(exception.getStatusCode())
 				.entity(Error.builder()
 						.code(exception.getCode())
 						.detail(exception.getDetail())
-						.status(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()))
+						.status(String.valueOf(exception.getStatusCode()))
 						.source(exception.getSource())
 						.title(exception.getTitle())
 						.build())
