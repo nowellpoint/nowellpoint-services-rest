@@ -1,6 +1,7 @@
 package com.nowellpoint.services.rest.model;
 
 import java.time.Instant;
+import java.util.List;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.UriBuilder;
@@ -15,6 +16,7 @@ import com.nowellpoint.services.rest.UserResource;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 
 @Value
@@ -34,6 +36,7 @@ public class User {
 	private Instant createdOn;
 	private Instant updatedOn;
 	private String organizationId;
+	private @Singular("activityHistory") List<Activity> activityHistory;
 	
 	public String getName() {
 		return firstName != null ? firstName.concat(" ").concat(lastName) : lastName;
@@ -65,7 +68,8 @@ public class User {
 			@BsonProperty("lastLoggedIn") Instant lastLoggedIn,
 			@BsonProperty("createdOn") Instant createdOn,
 			@BsonProperty("updatedOn") Instant updatedOn,
-			@BsonProperty("organizationId") String organizationId) {
+			@BsonProperty("organizationId") String organizationId,
+			@BsonProperty("activityHistory") List<Activity> activityHistory) {
 		
 		this.id = id;
 		this.firstName = firstName;
@@ -80,5 +84,6 @@ public class User {
 		this.createdOn = createdOn;
 		this.updatedOn = updatedOn;
 		this.organizationId = organizationId;
+		this.activityHistory = activityHistory;
 	}
 }

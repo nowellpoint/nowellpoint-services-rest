@@ -22,7 +22,7 @@ import com.nowellpoint.services.rest.model.RegistrationRequest;
 import com.nowellpoint.services.rest.model.ResponseEntity;
 import com.nowellpoint.services.rest.model.ServiceException;
 
-@Path("/registration")
+@Path("/registrations")
 @RequestScoped
 public class RegistrationResource {
 	
@@ -45,7 +45,7 @@ public class RegistrationResource {
         		throw new WebApplicationException(e.getMessage(), Status.FORBIDDEN);
         	}
         	
-        	return Response.created(URI.create(""))
+        	return Response.created(URI.create(registration.getUser().getHref()))
         			.entity(ResponseEntity.of(registration))
         			.build();
     	} else {

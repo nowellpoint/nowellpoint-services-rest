@@ -11,6 +11,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
 import com.nowellpoint.api.service.UserService;
 import com.nowellpoint.services.rest.model.Identity;
 
@@ -23,6 +28,11 @@ public class IdentityResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@Operation(summary = "Get user information for the logged in user")
+	@APIResponse(description = "User information",
+	             content = @Content(mediaType = "application/json",
+	                                schema = @Schema(implementation = Identity.class)))
+	@APIResponse(responseCode = "400", description = "The logged in user was not found")
 	public Response getOrganization(@Context SecurityContext context) {
 		var user = userService.findById(context.getUserPrincipal().getName());
 		

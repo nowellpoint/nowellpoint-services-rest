@@ -28,7 +28,6 @@ public class UserResource {
 	
 	@Inject
 	@Claim(standard = Claims.groups)
-	//@Claim("cognito:groups")
 	String groups;
 	
 	@GET

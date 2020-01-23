@@ -1,5 +1,8 @@
 package com.nowellpoint.services.rest.model;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
@@ -15,15 +18,11 @@ public class Address {
 	private String locality;
 	private String regionCode;
 	private String region;
-	private String countryCode;
+	private @Builder.Default String countryCode = Locale.getDefault().getCountry();
 	private String postalCode;
 	
 	public String getCountry() {
-		String country = null;
-		switch (countryCode) {
-		case "US" : country = "United States";
-		}
-		return country;
+		return ResourceBundle.getBundle("countries", Locale.getDefault()).getString(getCountryCode());
 	}
 	
 	@BsonCreator

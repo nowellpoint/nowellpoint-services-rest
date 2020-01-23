@@ -1,7 +1,9 @@
 # Eclipse
 .project
 .classpath
+.factorypath
 .settings/
+.mvn/
 bin/
 target/
 

@@ -231,7 +231,7 @@ public class QueryResultImpl implements QueryResult {
 	}
 	
 	private List<?> parseList(Field field, JsonObject json) {
-        Class<?> listType = getParameterizedType(field);								
+        Class<?> listType = getParameterizedType(field);		
         QueryResultImpl queryResult = new QueryResultImpl();
         return queryResult.getRecords(listType, new StringReader(json.toString()));
     }

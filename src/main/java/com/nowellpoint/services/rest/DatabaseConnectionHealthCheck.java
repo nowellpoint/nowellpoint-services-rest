@@ -7,6 +7,9 @@ import org.eclipse.microprofile.health.Readiness;
 
 import com.mongodb.client.MongoClient;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
@@ -19,6 +22,10 @@ public class DatabaseConnectionHealthCheck implements HealthCheck {
 	
 	@Override
 	public HealthCheckResponse call() {
+		
+		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+		mongoLogger.setLevel(Level.SEVERE); 
+		
 		HealthCheckResponseBuilder builder = HealthCheckResponse.named("MongoDB connection health check").up();
         try {
             StringBuilder databases = new StringBuilder();

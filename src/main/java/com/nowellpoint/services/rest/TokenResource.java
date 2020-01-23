@@ -20,7 +20,10 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
+import org.jose4j.jwt.MalformedClaimException;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.lang.JoseException;
+
 import com.nowellpoint.api.service.IdentityProviderService;
 import com.nowellpoint.services.rest.model.Token;
 
@@ -41,16 +44,14 @@ public class TokenResource {
 	public Response authorize( 
 			@FormParam("username") String username, 
 			@FormParam("password") String password) {
-		
+				
 		Token token = null;
 				
 		try {
 			token = identityProviderService.authenticate(username, password);
-		} catch (NotAuthorizedException e) {
-			throw new WebApplicationException(e.getErrorCode() + ": " + e.getErrorMessage(), Status.BAD_REQUEST);
-		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | JoseException | MalformedClaimException | InvalidJwtException e) {
 			throw new WebApplicationException(e.getMessage(), Status.INTERNAL_SERVER_ERROR);
-		}
+		} 
 		
 		CacheControl cacheControl = new CacheControl();
 		cacheControl.setNoStore(Boolean.TRUE);
@@ -72,11 +73,9 @@ public class TokenResource {
 				
 		try {
 			token = identityProviderService.refreshToken(refreshToken);
-		} catch (NotAuthorizedException e) {
-			throw new WebApplicationException(e.getErrorCode() + ": " + e.getErrorMessage(), Status.BAD_REQUEST);
-		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | JoseException | MalformedClaimException | InvalidJwtException e) {
 			throw new WebApplicationException(e.getMessage(), Status.INTERNAL_SERVER_ERROR);
-		}
+		} 
 		
 		CacheControl cacheControl = new CacheControl();
 		cacheControl.setNoStore(Boolean.TRUE);

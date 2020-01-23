@@ -159,7 +159,7 @@ public class DatastoreImpl implements Datastore {
 	protected <T> String buildQueryString(Class<T> type) {
 		List<Field> fields = getAllFields(type);
 		StringBuilder queryString = new StringBuilder("Select ").append(fields.stream()
-				.map(f -> resolveField(f))
+				.map(f -> resolveField(f, Object.class))
 				.collect(Collectors.joining(", ")))
 				.append(" From ")
 				.append(type.isAnnotationPresent(Entity.class) ? type.getAnnotation(Entity.class).value() : type.getSimpleName());
@@ -234,7 +234,7 @@ public class DatastoreImpl implements Datastore {
     	return String.valueOf(FieldUtils.readField(fields.stream().findFirst().get(), entity));
     }
     
-    private String resolveField(Field field) {
+    private String resolveField(Field field, Class<?> filter) {
 		if (field.isAnnotationPresent(Id.class)) {
 			return "Id";
 		} else if (field.isAnnotationPresent(Column.class)) {
@@ -242,7 +242,8 @@ public class DatastoreImpl implements Datastore {
 		} else if (field.isAnnotationPresent(OneToOne.class)) {
 			List<Field> fields = getAllFields(field.getType());
 			return new StringBuilder().append(fields.stream()
-					.map(f -> field.getAnnotation(OneToOne.class).value() + "." + resolveField(f))
+					.filter(f -> f.getType() != filter)
+					.map(f -> field.getAnnotation(OneToOne.class).value() + "." + resolveField(f, f.getType()))
 					.collect(Collectors.joining(", ")))
 					.toString();
 		} else if (field.isAnnotationPresent(OneToMany.class)) {
@@ -250,7 +251,7 @@ public class DatastoreImpl implements Datastore {
 			Class<?> type = (Class<?>) parameterizedType.getActualTypeArguments()[0];	
 			List<Field> fields = getAllFields(type);
 			return new StringBuilder("(Select ").append(fields.stream()
-					.map(f -> resolveField(f))
+					.map(f -> resolveField(f, Object.class))
 					.collect(Collectors.joining(", ")))
 					.append(" From ")
 					.append(field.isAnnotationPresent(OneToMany.class) ? field.getAnnotation(OneToMany.class).value() : field.getType().getSimpleName())

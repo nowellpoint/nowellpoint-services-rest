@@ -17,19 +17,15 @@ import com.nowellpoint.services.rest.model.UserRequest;
 public class RegistrationService {
 	
 	@Inject
-	UserService userService;
+	protected UserService userService;
 	
 	@Inject
-	OrganizationService organizationService;
+	protected OrganizationService organizationService;
+	
+	@Inject
+	protected EmailService emailService;
 	
 	public Registration register(RegistrationRequest registrationRequest) {
-
-		OrganizationRequest organizationRequest = OrganizationRequest.builder()
-				.countryCode(registrationRequest.getCountryCode())
-				.name(registrationRequest.getCompanyName())
-				.build();
-		
-		Organization organization = organizationService.create(organizationRequest);
 		
 		UserRequest userRequest = UserRequest.builder()
 				.email(registrationRequest.getEmail())
@@ -40,7 +36,16 @@ public class RegistrationService {
 				.timeZone(registrationRequest.getTimeZone())
 				.build();
 		
-		User user = userService.create(organization.getId(), userRequest);
+		var user = userService.create(userRequest);
+
+		OrganizationRequest organizationRequest = OrganizationRequest.builder()
+				.countryCode(registrationRequest.getCountryCode())
+				.name(registrationRequest.getCompanyName())
+				.build();
+		
+		var organization = organizationService.create(organizationRequest);
+		
+		userService.addToOrganization(user.getId(), organization.getId());
 		
 		Registration registration = Registration.builder()
 				.companyName(organization.getName())
@@ -54,6 +59,8 @@ public class RegistrationService {
 				.user(Reference.of(UserResource.class, User.class, user.getId()))
 				.organization(Reference.of(OrganizationResource.class, Organization.class, organization.getId()))
 				.build();
+		
+		emailService.sendEmailVerificationMessage(user, "slkooeijeijkdncije");
 		
 		return registration;
 	}

@@ -2,6 +2,7 @@ package com.nowellpoint.services.rest.model.sforce;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,12 +39,16 @@ public class QueryImpl<T> implements Query<T> {
 				.concat(" Where Id = '")
 				.concat(id)
 				.concat("'");
+		LOG.info(queryString);
 	}
 	
+	@SuppressWarnings("serial")
 	@Override
 	public List<T> getResults() {
 		
 		List<T> results = Collections.emptyList();
+		
+		LOG.info(queryString);
 		
 		try {
 			URIBuilder builder = new URIBuilder(datastore.getIdentity().getUrls().getQuery()).addParameter("q", queryString);
@@ -60,7 +65,8 @@ public class QueryImpl<T> implements Query<T> {
 				QueryResultImpl queryResult = new QueryResultImpl();
 				results = queryResult.getRecords(type, response.getEntity().getContent());
 			} else {
-				throw new SalesforceServiceException(response.getStatusLine().getStatusCode(), JsonbUtil.fromJson(response.getEntity().getContent(), ApiError.class));
+				List<ApiError> errors = JsonbUtil.fromJson(response.getEntity().getContent(), new ArrayList<ApiError>(){}.getClass().getGenericSuperclass());
+				throw new SalesforceServiceException(response.getStatusLine().getStatusCode(), errors.get(0));
 			}
 			
 		} catch (URISyntaxException | IOException e) {

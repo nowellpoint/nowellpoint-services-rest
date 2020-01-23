@@ -42,6 +42,7 @@ public class AbstractService {
 	
 	protected Datastore createDatastore(Connection connection) {
 		String secretKey = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
+		System.out.println(connection.getConnectionString());
 		String connectionString = SecureValue.decryptBase64(secretKey, connection.getConnectionString());
 		
 		String[] params = connectionString.split(" ", 4);

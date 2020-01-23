@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Target(FIELD)
 public @interface OneToMany {
 	String value();
+	String mappedBy() default "";
 }

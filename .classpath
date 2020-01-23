@@ -1,63 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
-		<attributes>
-			<attribute name="test" value="true"/>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="target/classes" path="src/main/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
+	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar" sourcepath="M2_REPO/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1-sources.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-			<attribute name="module" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy/1.0.0.Final/quarkus-resteasy-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy/1.0.0.Final/quarkus-resteasy-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx-http/1.0.0.Final/quarkus-vertx-http-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx-http/1.0.0.Final/quarkus-vertx-http-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-core/1.0.0.Final/quarkus-core-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-core/1.0.0.Final/quarkus-core-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy/1.1.0.Final/quarkus-resteasy-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy/1.1.0.Final/quarkus-resteasy-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx-http/1.1.0.Final/quarkus-vertx-http-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx-http/1.1.0.Final/quarkus-vertx-http-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-core/1.1.0.Final/quarkus-core-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-core/1.1.0.Final/quarkus-core-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/annotation/jakarta.annotation-api/1.3.5/jakarta.annotation-api-1.3.5.jar" sourcepath="M2_REPO/jakarta/annotation/jakarta.annotation-api/1.3.5/jakarta.annotation-api-1.3.5-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/enterprise/jakarta.enterprise.cdi-api/2.0.2/jakarta.enterprise.cdi-api-2.0.2.jar" sourcepath="M2_REPO/jakarta/enterprise/jakarta.enterprise.cdi-api/2.0.2/jakarta.enterprise.cdi-api-2.0.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/el/jakarta.el-api/3.0.3/jakarta.el-api-3.0.3.jar" sourcepath="M2_REPO/jakarta/el/jakarta.el-api/3.0.3/jakarta.el-api-3.0.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/interceptor/jakarta.interceptor-api/1.2.5/jakarta.interceptor-api-1.2.5.jar" sourcepath="M2_REPO/jakarta/interceptor/jakarta.interceptor-api/1.2.5/jakarta.interceptor-api-1.2.5-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/jakarta/ejb/jakarta.ejb-api/3.2.6/jakarta.ejb-api-3.2.6.jar" sourcepath="M2_REPO/jakarta/ejb/jakarta.ejb-api/3.2.6/jakarta.ejb-api-3.2.6-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/jakarta/transaction/jakarta.transaction-api/1.3.3/jakarta.transaction-api-1.3.3.jar" sourcepath="M2_REPO/jakarta/transaction/jakarta.transaction-api/1.3.3/jakarta.transaction-api-1.3.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/inject/jakarta.inject-api/1.0/jakarta.inject-api-1.0.jar" sourcepath="M2_REPO/jakarta/inject/jakarta.inject-api/1.0/jakarta.inject-api-1.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-config/1.3.9/smallrye-config-1.3.9.jar" sourcepath="M2_REPO/io/smallrye/smallrye-config/1.3.9/smallrye-config-1.3.9-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/smallrye/config/smallrye-config/1.5.1/smallrye-config-1.5.1.jar" sourcepath="M2_REPO/io/smallrye/config/smallrye-config/1.5.1/smallrye-config-1.5.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/smallrye/config/smallrye-config-common/1.5.1/smallrye-config-common-1.5.1.jar" sourcepath="M2_REPO/io/smallrye/config/smallrye-config-common/1.5.1/smallrye-config-common-1.5.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/config/microprofile-config-api/1.3/microprofile-config-api-1.3.jar" sourcepath="M2_REPO/org/eclipse/microprofile/config/microprofile-config-api/1.3/microprofile-config-api-1.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/logging/jboss-logging/3.3.2.Final/jboss-logging-3.3.2.Final.jar" sourcepath="M2_REPO/org/jboss/logging/jboss-logging/3.3.2.Final/jboss-logging-3.3.2.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/logmanager/jboss-logmanager-embedded/1.0.4/jboss-logmanager-embedded-1.0.4.jar" sourcepath="M2_REPO/org/jboss/logmanager/jboss-logmanager-embedded/1.0.4/jboss-logmanager-embedded-1.0.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/wildfly/common/wildfly-common/1.5.0.Final-format-001/wildfly-common-1.5.0.Final-format-001.jar" sourcepath="M2_REPO/org/wildfly/common/wildfly-common/1.5.0.Final-format-001/wildfly-common-1.5.0.Final-format-001-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/logging/jboss-logging-annotations/2.1.0.Final/jboss-logging-annotations-2.1.0.Final.jar" sourcepath="M2_REPO/org/jboss/logging/jboss-logging-annotations/2.1.0.Final/jboss-logging-annotations-2.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/threads/jboss-threads/3.0.0.Final/jboss-threads-3.0.0.Final.jar" sourcepath="M2_REPO/org/jboss/threads/jboss-threads/3.0.0.Final/jboss-threads-3.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.29/slf4j-api-1.7.29.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.29/slf4j-api-1.7.29-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/slf4j/slf4j-jboss-logging/1.2.0.Final/slf4j-jboss-logging-1.2.0.Final.jar" sourcepath="M2_REPO/org/jboss/slf4j/slf4j-jboss-logging/1.2.0.Final/slf4j-jboss-logging-1.2.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/graalvm/sdk/graal-sdk/19.2.1/graal-sdk-19.2.1.jar" sourcepath="M2_REPO/org/graalvm/sdk/graal-sdk/19.2.1/graal-sdk-19.2.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/security/quarkus-security/1.0.0.Final/quarkus-security-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/security/quarkus-security/1.0.0.Final/quarkus-security-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx-core/1.0.0.Final/quarkus-vertx-core-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx-core/1.0.0.Final/quarkus-vertx-core-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-arc/1.0.0.Final/quarkus-arc-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-arc/1.0.0.Final/quarkus-arc-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/arc/arc/1.0.0.Final/arc-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/arc/arc/1.0.0.Final/arc-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/security/quarkus-security/1.0.1.Final/quarkus-security-1.0.1.Final.jar" sourcepath="M2_REPO/io/quarkus/security/quarkus-security/1.0.1.Final/quarkus-security-1.0.1.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx-core/1.1.0.Final/quarkus-vertx-core-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx-core/1.1.0.Final/quarkus-vertx-core-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-arc/1.1.0.Final/quarkus-arc-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-arc/1.1.0.Final/quarkus-arc-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/arc/arc/1.1.0.Final/arc-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/arc/arc/1.1.0.Final/arc-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/context-propagation/microprofile-context-propagation-api/1.0.1/microprofile-context-propagation-api-1.0.1.jar" sourcepath="M2_REPO/org/eclipse/microprofile/context-propagation/microprofile-context-propagation-api/1.0.1/microprofile-context-propagation-api-1.0.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-netty/1.0.0.Final/quarkus-netty-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-netty/1.0.0.Final/quarkus-netty-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-netty/1.1.0.Final/quarkus-netty-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-netty/1.1.0.Final/quarkus-netty-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-codec/4.1.42.Final/netty-codec-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-codec/4.1.42.Final/netty-codec-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-common/4.1.42.Final/netty-common-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-common/4.1.42.Final/netty-common-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-buffer/4.1.42.Final/netty-buffer-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-buffer/4.1.42.Final/netty-buffer-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-transport/4.1.42.Final/netty-transport-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-transport/4.1.42.Final/netty-transport-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-resolver/4.1.42.Final/netty-resolver-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-resolver/4.1.42.Final/netty-resolver-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-handler/4.1.42.Final/netty-handler-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-handler/4.1.42.Final/netty-handler-4.1.42.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-core/3.8.3/vertx-core-3.8.3.jar" sourcepath="M2_REPO/io/vertx/vertx-core/3.8.3/vertx-core-3.8.3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-core/3.8.4/vertx-core-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-core/3.8.4/vertx-core-3.8.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-handler-proxy/4.1.42.Final/netty-handler-proxy-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-handler-proxy/4.1.42.Final/netty-handler-proxy-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-codec-socks/4.1.42.Final/netty-codec-socks-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-codec-socks/4.1.42.Final/netty-codec-socks-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-codec-http/4.1.42.Final/netty-codec-http-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-codec-http/4.1.42.Final/netty-codec-http-4.1.42.Final-sources.jar"/>
@@ -65,12 +44,12 @@
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-resolver-dns/4.1.42.Final/netty-resolver-dns-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-resolver-dns/4.1.42.Final/netty-resolver-dns-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-codec-dns/4.1.42.Final/netty-codec-dns-4.1.42.Final.jar" sourcepath="M2_REPO/io/netty/netty-codec-dns/4.1.42.Final/netty-codec-dns-4.1.42.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.9.10/jackson-core-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.9.10/jackson-core-2.9.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-web/3.8.3-01/vertx-web-3.8.3-01.jar" sourcepath="M2_REPO/io/vertx/vertx-web/3.8.3-01/vertx-web-3.8.3-01-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-web-common/3.8.3-01/vertx-web-common-3.8.3-01.jar" sourcepath="M2_REPO/io/vertx/vertx-web-common/3.8.3-01/vertx-web-common-3.8.3-01-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-auth-common/3.8.3/vertx-auth-common-3.8.3.jar" sourcepath="M2_REPO/io/vertx/vertx-auth-common/3.8.3/vertx-auth-common-3.8.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-bridge-common/3.8.3/vertx-bridge-common-3.8.3.jar" sourcepath="M2_REPO/io/vertx/vertx-bridge-common/3.8.3/vertx-bridge-common-3.8.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy-server-common/1.0.0.Final/quarkus-resteasy-server-common-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy-server-common/1.0.0.Final/quarkus-resteasy-server-common-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy-common/1.0.0.Final/quarkus-resteasy-common-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy-common/1.0.0.Final/quarkus-resteasy-common-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-web/3.8.4/vertx-web-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-web/3.8.4/vertx-web-3.8.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-web-common/3.8.4/vertx-web-common-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-web-common/3.8.4/vertx-web-common-3.8.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-auth-common/3.8.4/vertx-auth-common-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-auth-common/3.8.4/vertx-auth-common-3.8.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-bridge-common/3.8.4/vertx-bridge-common-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-bridge-common/3.8.4/vertx-bridge-common-3.8.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy-server-common/1.1.0.Final/quarkus-resteasy-server-common-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy-server-common/1.1.0.Final/quarkus-resteasy-server-common-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy-common/1.1.0.Final/quarkus-resteasy-common-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy-common/1.1.0.Final/quarkus-resteasy-common-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/resteasy/resteasy-core/4.4.1.Final/resteasy-core-4.4.1.Final.jar" sourcepath="M2_REPO/org/jboss/resteasy/resteasy-core/4.4.1.Final/resteasy-core-4.4.1.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/spec/javax/ws/rs/jboss-jaxrs-api_2.1_spec/2.0.1.Final/jboss-jaxrs-api_2.1_spec-2.0.1.Final.jar" sourcepath="M2_REPO/org/jboss/spec/javax/ws/rs/jboss-jaxrs-api_2.1_spec/2.0.1.Final/jboss-jaxrs-api_2.1_spec-2.0.1.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec/2.0.0.Final/jboss-jaxb-api_2.3_spec-2.0.0.Final.jar" sourcepath="M2_REPO/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec/2.0.0.Final/jboss-jaxb-api_2.3_spec-2.0.0.Final-sources.jar"/>
@@ -78,74 +57,99 @@
 	<classpathentry kind="var" path="M2_REPO/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar" sourcepath="M2_REPO/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar" sourcepath="M2_REPO/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/activation/jakarta.activation/1.2.1/jakarta.activation-1.2.1.jar" sourcepath="M2_REPO/com/sun/activation/jakarta.activation/1.2.1/jakarta.activation-1.2.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy-jsonb/1.0.0.Final/quarkus-resteasy-jsonb-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy-jsonb/1.0.0.Final/quarkus-resteasy-jsonb-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jsonb/1.0.0.Final/quarkus-jsonb-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jsonb/1.0.0.Final/quarkus-jsonb-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-resteasy-jsonb/1.1.0.Final/quarkus-resteasy-jsonb-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-resteasy-jsonb/1.1.0.Final/quarkus-resteasy-jsonb-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jsonb/1.1.0.Final/quarkus-jsonb-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jsonb/1.1.0.Final/quarkus-jsonb-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/yasson/1.0.5/yasson-1.0.5.jar" sourcepath="M2_REPO/org/eclipse/yasson/1.0.5/yasson-1.0.5-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/json/bind/jakarta.json.bind-api/1.0.2/jakarta.json.bind-api-1.0.2.jar" sourcepath="M2_REPO/jakarta/json/bind/jakarta.json.bind-api/1.0.2/jakarta.json.bind-api-1.0.2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jsonp/1.0.0.Final/quarkus-jsonp-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jsonp/1.0.0.Final/quarkus-jsonp-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jsonp/1.1.0.Final/quarkus-jsonp-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jsonp/1.1.0.Final/quarkus-jsonp-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/glassfish/jakarta.json/1.1.6/jakarta.json-1.1.6.jar" sourcepath="M2_REPO/org/glassfish/jakarta.json/1.1.6/jakarta.json-1.1.6-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/resteasy/resteasy-json-binding-provider/4.4.1.Final/resteasy-json-binding-provider-4.4.1.Final.jar" sourcepath="M2_REPO/org/jboss/resteasy/resteasy-json-binding-provider/4.4.1.Final/resteasy-json-binding-provider-4.4.1.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/resteasy/resteasy-json-p-provider/4.4.1.Final/resteasy-json-p-provider-4.4.1.Final.jar" sourcepath="M2_REPO/org/jboss/resteasy/resteasy-json-p-provider/4.4.1.Final/resteasy-json-p-provider-4.4.1.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.6/commons-io-2.6.jar" sourcepath="M2_REPO/commons-io/commons-io/2.6/commons-io-2.6-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-mongodb-client/1.0.0.Final/quarkus-mongodb-client-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-mongodb-client/1.0.0.Final/quarkus-mongodb-client-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-reactive-streams-operators/1.0.0.Final/quarkus-smallrye-reactive-streams-operators-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-reactive-streams-operators/1.0.0.Final/quarkus-smallrye-reactive-streams-operators-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-mongodb-client/1.1.0.Final/quarkus-mongodb-client-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-mongodb-client/1.1.0.Final/quarkus-mongodb-client-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-reactive-streams-operators/1.1.0.Final/quarkus-smallrye-reactive-streams-operators-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-reactive-streams-operators/1.1.0.Final/quarkus-smallrye-reactive-streams-operators-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/reactive-streams-operators/microprofile-reactive-streams-operators-api/1.0/microprofile-reactive-streams-operators-api-1.0.jar" sourcepath="M2_REPO/org/eclipse/microprofile/reactive-streams-operators/microprofile-reactive-streams-operators-api/1.0/microprofile-reactive-streams-operators-api-1.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/reactive-streams-operators/microprofile-reactive-streams-operators-core/1.0/microprofile-reactive-streams-operators-core-1.0.jar" sourcepath="M2_REPO/org/eclipse/microprofile/reactive-streams-operators/microprofile-reactive-streams-operators-core/1.0/microprofile-reactive-streams-operators-core-1.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/reactive/smallrye-reactive-streams-operators/1.0.10/smallrye-reactive-streams-operators-1.0.10.jar" sourcepath="M2_REPO/io/smallrye/reactive/smallrye-reactive-streams-operators/1.0.10/smallrye-reactive-streams-operators-1.0.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/reactivex/rxjava2/rxjava/2.2.13/rxjava-2.2.13.jar" sourcepath="M2_REPO/io/reactivex/rxjava2/rxjava/2.2.13/rxjava-2.2.13-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/reactivex/rxjava2/rxjava/2.2.15/rxjava-2.2.15.jar" sourcepath="M2_REPO/io/reactivex/rxjava2/rxjava/2.2.15/rxjava-2.2.15-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-context-propagation-propagators-rxjava2/1.0.11/smallrye-context-propagation-propagators-rxjava2-1.0.11.jar" sourcepath="M2_REPO/io/smallrye/smallrye-context-propagation-propagators-rxjava2/1.0.11/smallrye-context-propagation-propagators-rxjava2-1.0.11-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-context-propagation/1.0.0.Final/quarkus-smallrye-context-propagation-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-context-propagation/1.0.0.Final/quarkus-smallrye-context-propagation-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-context-propagation/1.1.0.Final/quarkus-smallrye-context-propagation-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-context-propagation/1.1.0.Final/quarkus-smallrye-context-propagation-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-context-propagation/1.0.11/smallrye-context-propagation-1.0.11.jar" sourcepath="M2_REPO/io/smallrye/smallrye-context-propagation/1.0.11/smallrye-context-propagation-1.0.11-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-context-propagation-api/1.0.11/smallrye-context-propagation-api-1.0.11.jar" sourcepath="M2_REPO/io/smallrye/smallrye-context-propagation-api/1.0.11/smallrye-context-propagation-api-1.0.11-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/resteasy/resteasy-context-propagation/4.4.1.Final/resteasy-context-propagation-4.4.1.Final.jar" sourcepath="M2_REPO/org/jboss/resteasy/resteasy-context-propagation/4.4.1.Final/resteasy-context-propagation-4.4.1.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx/1.0.0.Final/quarkus-vertx-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx/1.0.0.Final/quarkus-vertx-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jackson/1.0.0.Final/quarkus-jackson-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jackson/1.0.0.Final/quarkus-jackson-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx/1.1.0.Final/quarkus-vertx-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx/1.1.0.Final/quarkus-vertx-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jackson/1.1.0.Final/quarkus-jackson-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jackson/1.1.0.Final/quarkus-jackson-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.9.10.1/jackson-databind-2.9.10.1.jar" sourcepath="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.9.10.1/jackson-databind-2.9.10.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.9.10/jackson-annotations-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.9.10/jackson-annotations-2.9.10-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.9.10/jackson-datatype-jsr310-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.9.10/jackson-datatype-jsr310-2.9.10-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.9.10/jackson-datatype-jdk8-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.9.10/jackson-datatype-jdk8-2.9.10-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/module/jackson-module-parameter-names/2.9.10/jackson-module-parameter-names-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/module/jackson-module-parameter-names/2.9.10/jackson-module-parameter-names-2.9.10-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/reactive/smallrye-axle-generator/0.0.10/smallrye-axle-generator-0.0.10.jar" sourcepath="M2_REPO/io/smallrye/reactive/smallrye-axle-generator/0.0.10/smallrye-axle-generator-0.0.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-codegen/3.8.3/vertx-codegen-3.8.3.jar" sourcepath="M2_REPO/io/vertx/vertx-codegen/3.8.3/vertx-codegen-3.8.3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-codegen/3.8.4/vertx-codegen-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-codegen/3.8.4/vertx-codegen-3.8.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mvel/mvel2/2.4.4.Final/mvel2-2.4.4.Final.jar" sourcepath="M2_REPO/org/mvel/mvel2/2.4.4.Final/mvel2-2.4.4.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/reactive/smallrye-axle-core/0.0.10/smallrye-axle-core-0.0.10.jar" sourcepath="M2_REPO/io/smallrye/reactive/smallrye-axle-core/0.0.10/smallrye-axle-core-0.0.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-rx-java2/3.8.3/vertx-rx-java2-3.8.3.jar" sourcepath="M2_REPO/io/vertx/vertx-rx-java2/3.8.3/vertx-rx-java2-3.8.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-rx-gen/3.8.3/vertx-rx-gen-3.8.3.jar" sourcepath="M2_REPO/io/vertx/vertx-rx-gen/3.8.3/vertx-rx-gen-3.8.3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-rx-java2/3.8.4/vertx-rx-java2-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-rx-java2/3.8.4/vertx-rx-java2-3.8.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-rx-gen/3.8.4/vertx-rx-gen-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-rx-gen/3.8.4/vertx-rx-gen-3.8.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongo-java-driver/3.10.2/mongo-java-driver-3.10.2.jar" sourcepath="M2_REPO/org/mongodb/mongo-java-driver/3.10.2/mongo-java-driver-3.10.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongodb-driver-reactivestreams/1.11.0/mongodb-driver-reactivestreams-1.11.0.jar" sourcepath="M2_REPO/org/mongodb/mongodb-driver-reactivestreams/1.11.0/mongodb-driver-reactivestreams-1.11.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongodb-driver-async/3.10.0/mongodb-driver-async-3.10.0.jar" sourcepath="M2_REPO/org/mongodb/mongodb-driver-async/3.10.0/mongodb-driver-async-3.10.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mongodb/bson/3.10.0/bson-3.10.0.jar" sourcepath="M2_REPO/org/mongodb/bson/3.10.0/bson-3.10.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongodb-driver-core/3.10.0/mongodb-driver-core-3.10.0.jar" sourcepath="M2_REPO/org/mongodb/mongodb-driver-core/3.10.0/mongodb-driver-core-3.10.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-health/1.0.0.Final/quarkus-smallrye-health-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-health/1.0.0.Final/quarkus-smallrye-health-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-health/1.1.0.Final/quarkus-smallrye-health-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-health/1.1.0.Final/quarkus-smallrye-health-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-health/2.1.0/smallrye-health-2.1.0.jar" sourcepath="M2_REPO/io/smallrye/smallrye-health/2.1.0/smallrye-health-2.1.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/health/microprofile-health-api/2.1/microprofile-health-api-2.1.jar" sourcepath="M2_REPO/org/eclipse/microprofile/health/microprofile-health-api/2.1/microprofile-health-api-2.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-jwt/1.0.0.Final/quarkus-smallrye-jwt-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-jwt/1.0.0.Final/quarkus-smallrye-jwt-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-jwt/1.1.0.Final/quarkus-smallrye-jwt-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-jwt/1.1.0.Final/quarkus-smallrye-jwt-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-jwt/2.0.10/smallrye-jwt-2.0.10.jar" sourcepath="M2_REPO/io/smallrye/smallrye-jwt/2.0.10/smallrye-jwt-2.0.10-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/jwt/microprofile-jwt-auth-api/1.1.1/microprofile-jwt-auth-api-1.1.1.jar" sourcepath="M2_REPO/org/eclipse/microprofile/jwt/microprofile-jwt-auth-api/1.1.1/microprofile-jwt-auth-api-1.1.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/bitbucket/b_c/jose4j/0.7.0/jose4j-0.7.0.jar" sourcepath="M2_REPO/org/bitbucket/b_c/jose4j/0.7.0/jose4j-0.7.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx-web/1.0.0.Final/quarkus-vertx-web-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx-web/1.0.0.Final/quarkus-vertx-web-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-security/1.0.0.Final/quarkus-security-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-security/1.0.0.Final/quarkus-security-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vertx-web/1.1.0.Final/quarkus-vertx-web-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vertx-web/1.1.0.Final/quarkus-vertx-web-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-security/1.1.0.Final/quarkus-security-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-security/1.1.0.Final/quarkus-security-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jakarta/servlet/jakarta.servlet-api/4.0.3/jakarta.servlet-api-4.0.3.jar" sourcepath="M2_REPO/jakarta/servlet/jakarta.servlet-api/4.0.3/jakarta.servlet-api-4.0.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-hibernate-validator/1.0.0.Final/quarkus-hibernate-validator-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-hibernate-validator/1.0.0.Final/quarkus-hibernate-validator-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-hibernate-validator/1.1.0.Final/quarkus-hibernate-validator-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-hibernate-validator/1.1.0.Final/quarkus-hibernate-validator-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hibernate/validator/hibernate-validator/6.1.0.Final/hibernate-validator-6.1.0.Final.jar" sourcepath="M2_REPO/org/hibernate/validator/hibernate-validator/6.1.0.Final/hibernate-validator-6.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/classmate/1.3.4/classmate-1.3.4.jar" sourcepath="M2_REPO/com/fasterxml/classmate/1.3.4/classmate-1.3.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-kubernetes/1.0.0.Final/quarkus-kubernetes-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-kubernetes/1.0.0.Final/quarkus-kubernetes-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-kubernetes/1.1.0.Final/quarkus-kubernetes-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-kubernetes/1.1.0.Final/quarkus-kubernetes-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-smallrye-openapi/1.1.0.Final/quarkus-smallrye-openapi-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-smallrye-openapi/1.1.0.Final/quarkus-smallrye-openapi-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/smallrye/smallrye-open-api/1.1.20/smallrye-open-api-1.1.20.jar" sourcepath="M2_REPO/io/smallrye/smallrye-open-api/1.1.20/smallrye-open-api-1.1.20-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/eclipse/microprofile/openapi/microprofile-openapi-api/1.1.2/microprofile-openapi-api-1.1.2.jar" sourcepath="M2_REPO/org/eclipse/microprofile/openapi/microprofile-openapi-api/1.1.2/microprofile-openapi-api-1.1.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.9.10/jackson-dataformat-yaml-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.9.10/jackson-dataformat-yaml-2.9.10-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/yaml/snakeyaml/1.23/snakeyaml-1.23.jar" sourcepath="M2_REPO/org/yaml/snakeyaml/1.23/snakeyaml-1.23-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jboss/jandex/2.1.2.Final/jandex-2.1.2.Final.jar" sourcepath="M2_REPO/org/jboss/jandex/2.1.2.Final/jandex-2.1.2.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jboss/shrinkwrap/shrinkwrap-api/1.2.6/shrinkwrap-api-1.2.6.jar" sourcepath="M2_REPO/org/jboss/shrinkwrap/shrinkwrap-api/1.2.6/shrinkwrap-api-1.2.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-swagger-ui/1.1.0.Final/quarkus-swagger-ui-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-swagger-ui/1.1.0.Final/quarkus-swagger-ui-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vault/1.1.0.Final/quarkus-vault-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vault/1.1.0.Final/quarkus-vault-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/squareup/okhttp3/okhttp/3.12.6/okhttp-3.12.6.jar" sourcepath="M2_REPO/com/squareup/okhttp3/okhttp/3.12.6/okhttp-3.12.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/squareup/okio/okio/1.15.0/okio-1.15.0.jar" sourcepath="M2_REPO/com/squareup/okio/okio/1.15.0/okio-1.15.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-vault-spi/1.1.0.Final/quarkus-vault-spi-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-vault-spi/1.1.0.Final/quarkus-vault-spi-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-mailer/1.1.0.Final/quarkus-mailer-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-mailer/1.1.0.Final/quarkus-mailer-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/smallrye/reactive/smallrye-axle-mail-client/0.0.10/smallrye-axle-mail-client-0.0.10.jar" sourcepath="M2_REPO/io/smallrye/reactive/smallrye-axle-mail-client/0.0.10/smallrye-axle-mail-client-0.0.10-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/vertx/vertx-mail-client/3.8.4/vertx-mail-client-3.8.4.jar" sourcepath="M2_REPO/io/vertx/vertx-mail-client/3.8.4/vertx-mail-client-3.8.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-amazon-lambda/1.1.0.Final/quarkus-amazon-lambda-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-amazon-lambda/1.1.0.Final/quarkus-amazon-lambda-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-lambda-java-core/1.1.0/aws-lambda-java-core-1.1.0.jar" sourcepath="M2_REPO/com/amazonaws/aws-lambda-java-core/1.1.0/aws-lambda-java-core-1.1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-lambda-java-events/2.2.5/aws-lambda-java-events-2.2.5.jar" sourcepath="M2_REPO/com/amazonaws/aws-lambda-java-events/2.2.5/aws-lambda-java-events-2.2.5-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.6/joda-time-2.6.jar" sourcepath="M2_REPO/joda-time/joda-time/2.6/joda-time-2.6-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar" sourcepath="M2_REPO/org/projectlombok/lombok/1.18.10/lombok-1.18.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-cognitoidp/1.11.628/aws-java-sdk-cognitoidp-1.11.628.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-cognitoidp/1.11.628/aws-java-sdk-cognitoidp-1.11.628-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-core/1.11.628/aws-java-sdk-core-1.11.628.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-core/1.11.628/aws-java-sdk-core-1.11.628-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-cognitoidp/1.11.700/aws-java-sdk-cognitoidp-1.11.700.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-cognitoidp/1.11.700/aws-java-sdk-cognitoidp-1.11.700-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-core/1.11.700/aws-java-sdk-core-1.11.700.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-core/1.11.700/aws-java-sdk-core-1.11.700-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.5.9/httpclient-4.5.9.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpclient/4.5.9/httpclient-4.5.9-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4.11/httpcore-4.4.11.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpcore/4.4.11/httpcore-4.4.11-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.13/commons-codec-1.13.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.13/commons-codec-1.13-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar" sourcepath="M2_REPO/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.10/jackson-dataformat-cbor-2.9.10.jar" sourcepath="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.10/jackson-dataformat-cbor-2.9.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.8.1/joda-time-2.8.1.jar" sourcepath="M2_REPO/joda-time/joda-time/2.8.1/joda-time-2.8.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/amazonaws/jmespath-java/1.11.628/jmespath-java-1.11.628.jar" sourcepath="M2_REPO/com/amazonaws/jmespath-java/1.11.628/jmespath-java-1.11.628-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-secretsmanager/1.11.628/aws-java-sdk-secretsmanager-1.11.628.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-secretsmanager/1.11.628/aws-java-sdk-secretsmanager-1.11.628-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/jmespath-java/1.11.700/jmespath-java-1.11.700.jar" sourcepath="M2_REPO/com/amazonaws/jmespath-java/1.11.700/jmespath-java-1.11.700-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-lambda/1.11.700/aws-java-sdk-lambda-1.11.700.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-lambda/1.11.700/aws-java-sdk-lambda-1.11.700-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-secretsmanager/1.11.700/aws-java-sdk-secretsmanager-1.11.700.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-secretsmanager/1.11.700/aws-java-sdk-secretsmanager-1.11.700-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/jsonwebtoken/jjwt/0.9.1/jjwt-0.9.1.jar" sourcepath="M2_REPO/io/jsonwebtoken/jjwt/0.9.1/jjwt-0.9.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/sendgrid/sendgrid-java/4.4.1/sendgrid-java-4.4.1.jar" sourcepath="M2_REPO/com/sendgrid/sendgrid-java/4.4.1/sendgrid-java-4.4.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/sendgrid/java-http-client/4.1.0/java-http-client-4.1.0.jar" sourcepath="M2_REPO/com/sendgrid/java-http-client/4.1.0/java-http-client-4.1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0.jar" sourcepath="M2_REPO/org/mockito/mockito-core/3.0.0/mockito-core-3.0.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/net/bytebuddy/byte-buddy/1.9.10/byte-buddy-1.9.10.jar" sourcepath="M2_REPO/net/bytebuddy/byte-buddy/1.9.10/byte-buddy-1.9.10-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/net/bytebuddy/byte-buddy-agent/1.9.10/byte-buddy-agent-1.9.10.jar" sourcepath="M2_REPO/net/bytebuddy/byte-buddy-agent/1.9.10/byte-buddy-agent-1.9.10-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/2.6/objenesis-2.6.jar" sourcepath="M2_REPO/org/objenesis/objenesis/2.6/objenesis-2.6-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.9/commons-lang3-3.9.jar" sourcepath="M2_REPO/org/apache/commons/commons-lang3/3.9/commons-lang3-3.9-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-junit5/1.0.0.Final/quarkus-junit5-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-junit5/1.0.0.Final/quarkus-junit5-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-bootstrap-core/1.0.0.Final/quarkus-bootstrap-core-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-bootstrap-core/1.0.0.Final/quarkus-bootstrap-core-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-junit5/1.1.0.Final/quarkus-junit5-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-junit5/1.1.0.Final/quarkus-junit5-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-bootstrap-core/1.1.0.Final/quarkus-bootstrap-core-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-bootstrap-core/1.1.0.Final/quarkus-bootstrap-core-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/27.0.1-jre/guava-27.0.1-jre.jar" sourcepath="M2_REPO/com/google/guava/guava/27.0.1-jre/guava-27.0.1-jre-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar" sourcepath="M2_REPO/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"/>
@@ -188,16 +192,15 @@
 	<classpathentry kind="var" path="M2_REPO/org/jsoup/jsoup/1.7.2/jsoup-1.7.2.jar" sourcepath="M2_REPO/org/jsoup/jsoup/1.7.2/jsoup-1.7.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-file/3.0.0/wagon-file-3.0.0.jar" sourcepath="M2_REPO/org/apache/maven/wagon/wagon-file/3.0.0/wagon-file-3.0.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/logging/commons-logging-jboss-logging/1.0.0.Final/commons-logging-jboss-logging-1.0.0.Final.jar" sourcepath="M2_REPO/org/jboss/logging/commons-logging-jboss-logging/1.0.0.Final/commons-logging-jboss-logging-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-test-common/1.0.0.Final/quarkus-test-common-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-test-common/1.0.0.Final/quarkus-test-common-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-core-deployment/1.0.0.Final/quarkus-core-deployment-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-core-deployment/1.0.0.Final/quarkus-core-deployment-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-test-common/1.1.0.Final/quarkus-test-common-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-test-common/1.1.0.Final/quarkus-test-common-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-core-deployment/1.1.0.Final/quarkus-core-deployment-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-core-deployment/1.1.0.Final/quarkus-core-deployment-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/quarkus/gizmo/gizmo/1.0.0.Final/gizmo-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/gizmo/gizmo/1.0.0.Final/gizmo-1.0.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/ow2/asm/asm/7.1/asm-7.1.jar" sourcepath="M2_REPO/org/ow2/asm/asm/7.1/asm-7.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/ow2/asm/asm-util/7.1/asm-util-7.1.jar" sourcepath="M2_REPO/org/ow2/asm/asm-util/7.1/asm-util-7.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/ow2/asm/asm-tree/7.1/asm-tree-7.1.jar" sourcepath="M2_REPO/org/ow2/asm/asm-tree/7.1/asm-tree-7.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/ow2/asm/asm-analysis/7.1/asm-analysis-7.1.jar" sourcepath="M2_REPO/org/ow2/asm/asm-analysis/7.1/asm-analysis-7.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/jboss/jandex/2.1.1.Final/jandex-2.1.1.Final.jar" sourcepath="M2_REPO/org/jboss/jandex/2.1.1.Final/jandex-2.1.1.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-builder/1.0.0.Final/quarkus-builder-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-builder/1.0.0.Final/quarkus-builder-1.0.0.Final-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jsonp-deployment/1.0.0.Final/quarkus-jsonp-deployment-1.0.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jsonp-deployment/1.0.0.Final/quarkus-jsonp-deployment-1.0.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-builder/1.1.0.Final/quarkus-builder-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-builder/1.1.0.Final/quarkus-builder-1.1.0.Final-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/quarkus/quarkus-jsonp-deployment/1.1.0.Final/quarkus-jsonp-deployment-1.1.0.Final.jar" sourcepath="M2_REPO/io/quarkus/quarkus-jsonp-deployment/1.1.0.Final/quarkus-jsonp-deployment-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter/5.5.2/junit-jupiter-5.5.2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter/5.5.2/junit-jupiter-5.5.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter-api/5.5.2/junit-jupiter-api-5.5.2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter-api/5.5.2/junit-jupiter-api-5.5.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0.jar" sourcepath="M2_REPO/org/apiguardian/apiguardian-api/1.1.0/apiguardian-api-1.1.0-sources.jar"/>
@@ -206,37 +209,20 @@
 	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter-params/5.5.2/junit-jupiter-params-5.5.2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter-params/5.5.2/junit-jupiter-params-5.5.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter-engine/5.5.2/junit-jupiter-engine-5.5.2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter-engine/5.5.2/junit-jupiter-engine-5.5.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/junit/platform/junit-platform-engine/1.5.2/junit-platform-engine-1.5.2.jar" sourcepath="M2_REPO/org/junit/platform/junit-platform-engine/1.5.2/junit-platform-engine-1.5.2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/rest-assured/rest-assured/4.1.1/rest-assured-4.1.1.jar" sourcepath="M2_REPO/io/rest-assured/rest-assured/4.1.1/rest-assured-4.1.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy/2.5.6/groovy-2.5.6.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy/2.5.6/groovy-2.5.6-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy-xml/2.5.6/groovy-xml-2.5.6.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy-xml/2.5.6/groovy-xml-2.5.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/rest-assured/rest-assured/4.1.2/rest-assured-4.1.2.jar" sourcepath="M2_REPO/io/rest-assured/rest-assured/4.1.2/rest-assured-4.1.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy/2.5.8/groovy-2.5.8.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy/2.5.8/groovy-2.5.8-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy-xml/2.5.8/groovy-xml-2.5.8.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy-xml/2.5.8/groovy-xml-2.5.8-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpmime/4.5.3/httpmime-4.5.3.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpmime/4.5.3/httpmime-4.5.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest/2.1/hamcrest-2.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest/2.1/hamcrest-2.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar" sourcepath="M2_REPO/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/rest-assured/json-path/4.1.1/json-path-4.1.1.jar" sourcepath="M2_REPO/io/rest-assured/json-path/4.1.1/json-path-4.1.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy-json/2.5.6/groovy-json-2.5.6.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy-json/2.5.6/groovy-json-2.5.6-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/rest-assured/rest-assured-common/4.1.1/rest-assured-common-4.1.1.jar" sourcepath="M2_REPO/io/rest-assured/rest-assured-common/4.1.1/rest-assured-common-4.1.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/rest-assured/xml-path/4.1.1/xml-path-4.1.1.jar" sourcepath="M2_REPO/io/rest-assured/xml-path/4.1.1/xml-path-4.1.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/rest-assured/json-path/4.1.2/json-path-4.1.2.jar" sourcepath="M2_REPO/io/rest-assured/json-path/4.1.2/json-path-4.1.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy-json/2.5.8/groovy-json-2.5.8.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy-json/2.5.8/groovy-json-2.5.8-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/rest-assured/rest-assured-common/4.1.2/rest-assured-common-4.1.2.jar" sourcepath="M2_REPO/io/rest-assured/rest-assured-common/4.1.2/rest-assured-common-4.1.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/rest-assured/xml-path/4.1.2/xml-path-4.1.2.jar" sourcepath="M2_REPO/io/rest-assured/xml-path/4.1.2/xml-path-4.1.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/sling/org.apache.sling.javax.activation/0.1.0/org.apache.sling.javax.activation-0.1.0.jar" sourcepath="M2_REPO/org/apache/sling/org.apache.sling.javax.activation/0.1.0/org.apache.sling.javax.activation-0.1.0-sources.jar"/>
 	<classpathentry kind="src" path="target/generated-sources/annotations">
 		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
 			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="m2e-apt" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
-		<attributes>
-			<attribute name="ignore_optional_problems" value="true"/>
-			<attribute name="test" value="true"/>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="m2e-apt" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>

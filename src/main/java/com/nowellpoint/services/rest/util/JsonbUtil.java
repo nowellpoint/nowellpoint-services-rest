@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 import javax.inject.Singleton;
 import javax.json.bind.Jsonb;
@@ -36,11 +37,11 @@ public class JsonbUtil implements JsonbConfigCustomizer {
 		jsonb = JsonbBuilder.create(config);
 	}
 	
-	public static <T> T fromJson(InputStream source, Class<T> type) {
+	public static <T> T fromJson(String source, Class<T> type) {
 		return jsonb.fromJson(source, type);
 	}
 	
-	public static <T> T fromJson(String source, Class<T> type) {
+	public static <T> T fromJson(InputStream source, Type type) {
 		return jsonb.fromJson(source, type);
 	}
 
