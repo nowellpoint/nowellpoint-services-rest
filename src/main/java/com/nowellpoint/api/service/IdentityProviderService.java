@@ -59,6 +59,8 @@ import com.amazonaws.services.cognitoidp.model.AuthFlowType;
 import com.amazonaws.services.cognitoidp.model.AuthenticationResultType;
 import com.amazonaws.services.cognitoidp.model.ChallengeNameType;
 import com.amazonaws.services.cognitoidp.model.DeliveryMediumType;
+import com.amazonaws.services.cognitoidp.model.GetUserRequest;
+import com.amazonaws.services.cognitoidp.model.GetUserResult;
 import com.amazonaws.services.cognitoidp.model.GlobalSignOutRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
@@ -92,8 +94,7 @@ public class IdentityProviderService {
 	private static String KEYSTORE_PASSWORD;
 	private static String KEYSTORE;
 	
-	private HttpsJwksVerificationKeyResolver httpsJwksKeyResolver;
-
+	private static HttpsJwksVerificationKeyResolver jwksKeyResolver;
 	private static final char[] chars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'a', 's',
 	        'd', 'f', 'g', 'h', 'j', 'k', 'l', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'A',
 	        'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', '<', '=', '>', '?', '@' };
@@ -128,14 +129,17 @@ public class IdentityProviderService {
 		KEYSTORE_PASSWORD            = config.getValue("javax.net.ssl.keyStorePassword", String.class);
 		KEYSTORE                     = config.getValue("javax.net.ssl.keyStore", String.class);
 		
-		HttpsJwks httpsJkws = new HttpsJwks(String.format(COGNITO_IDP_JWKS_URL, AWS_REGION, COGNITO_USER_POOL_ID));
-	    httpsJwksKeyResolver = new HttpsJwksVerificationKeyResolver(httpsJkws);
+		jwksKeyResolver              = new HttpsJwksVerificationKeyResolver(new HttpsJwks(String.format(COGNITO_IDP_JWKS_URL, AWS_REGION, COGNITO_USER_POOL_ID)));
 	}
 	
 	/**
-	 * @param request
-	 * @return
-	 */
+     * <p>
+     * The Identity provider service method to create a <code>user</code> in the given user pool.
+     * </p>
+     * 
+     * @return Returns the subject for the newly created user
+     */
+	
 	public String createUser(UserRequest request) {
 		AWSCognitoIdentityProvider cognitoClient = getCognitoIdentityClient();
 		AdminCreateUserRequest cognitoRequest = new AdminCreateUserRequest()
@@ -182,83 +186,84 @@ public class IdentityProviderService {
 				.getValue();
 	}
 	
+	/**
+     * <p>
+     * The Identity provider service method to authenticate the user the given <code>username</code> and <code>password</code>.
+     * </p>
+     * 
+     * @return Returns the token object with the new access token that was created during the authentication step
+     */
+	
 	public Token authenticate(String username, String password) {
 		final Map<String, String> authParams = new HashMap<>();
 		authParams.put(USERNAME, username);  
 		authParams.put(PASSWORD, password);
 		
+		Token token = null;
 		try {
-			
 			AuthenticationResultType authenticationResult = authenticate(authParams);
-			
-			JwtClaims claims = getClaims(authenticationResult.getAccessToken());
-			
-			User user = userService.findById(claims.getSubject());
-			
-			String accessToken = generateAccessToken(claims, user.getOrganizationId());
-			
-			Token token = Token.builder()
-					.id(getId())
-					.accessToken(accessToken)
-					.expiresIn(authenticationResult.getExpiresIn().longValue())
-					.refreshToken(authenticationResult.getRefreshToken())
-					.tokenType(authenticationResult.getTokenType())
-					.build();
-			
-			LoggedInEvent event = LoggedInEvent.builder()
-					.audience(user.getOrganizationId())
-					.expiration(Instant.ofEpochMilli(claims.getExpirationTime().getValueInMillis()))
-					.id(claims.getJwtId())
-					.issuedAt(Instant.ofEpochMilli(claims.getIssuedAt().getValueInMillis()))
-					.issuer(claims.getIssuer())
-					.subject(claims.getSubject())
-					.build();
-			
-			loggedInEvent.fireAsync(event);
-			
-			return token;
-			
+			token = createToken(authenticationResult);
 		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | JoseException | InvalidJwtException | MalformedClaimException e) {
 			logger.error(e);
 			throw new IdentityProviderServiceException(500, e.getClass().getSimpleName().toUpperCase(), ExceptionUtils.getStackTrace(e), "authenticate()", e.getMessage());
 		}
+		
+		return token;
 	}
+	
+	/**
+     * <p>
+     * The Identity provider service method to refresh the given <code>access token</code>.
+     * </p>
+     * 
+     * @return Returns the token object with the new access token that was created during the refresh token step
+     */
 	
 	public Token refreshToken(String refreshToken) {
 		final Map<String, String> authParams = new HashMap<>();
 		authParams.put(REFRESH_TOKEN, refreshToken);  
 		
+		Token token = null;
 		try {
-			
 			AuthenticationResultType authenticationResult = refreshToken(authParams);
-			
-			JwtClaims claims = getClaims(authenticationResult.getAccessToken());
-			
-			User user = userService.findById(claims.getSubject());
-			
-			String accessToken = generateAccessToken(claims, user.getOrganizationId());
-			
-			Token token = Token.builder()
-					.id(getId())
-					.accessToken(accessToken)
-					.expiresIn(authenticationResult.getExpiresIn().longValue())
-					.refreshToken(refreshToken)
-					.tokenType(authenticationResult.getTokenType())
-					.build();
-			
-			return token;
-		
+			authenticationResult.setRefreshToken(refreshToken);
+			token = createToken(authenticationResult);
 		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | JoseException | InvalidJwtException | MalformedClaimException e) {
 			logger.error(e);
 			throw new IdentityProviderServiceException(500, e.getClass().getSimpleName().toUpperCase(), ExceptionUtils.getStackTrace(e), "refreshToken()", e.getMessage());
 		}
+		
+		return token;
 	}
+	
+	public void getUser(String accessToken) {
+		AWSCognitoIdentityProvider cognitoClient = getCognitoIdentityClient();
+		GetUserRequest request = new GetUserRequest().withAccessToken(accessToken);
+		GetUserResult result = cognitoClient.getUser(request);
+		System.out.println(result.getUserAttributes().get(0));
+	}
+	
+	/**
+     * <p>
+     * The Identity provider service method to revoke the given <code>access token</code> with a global sign out.
+     * </p>
+     * 
+     * @return void
+     */
 	
 	public void revokeToken(String accessToken) {
 		GlobalSignOutRequest globalSignOutRequest = new GlobalSignOutRequest().withAccessToken(accessToken);
 		AWSCognitoIdentityProvider cognitoClient = getCognitoIdentityClient();
 		cognitoClient.globalSignOut(globalSignOutRequest);
 	}
+	
+	/**
+     * <p>
+     * The Identity provider service method to disable a <code>user</code> in the given user pool.
+     * </p>
+     * 
+     * @return void
+     */
 	
 	public void disableUser(String username) {
 		AdminDisableUserRequest disableUserRequest = new AdminDisableUserRequest()
@@ -267,6 +272,14 @@ public class IdentityProviderService {
 		
 		getCognitoIdentityClient().adminDisableUser(disableUserRequest);
 	}
+	
+	/**
+     * <p>
+     * The Identity provider service method to delete a <code>user</code> from the given user pool.
+     * </p>
+     * 
+     * @return void
+     */
 	
 	public void deleteUser(String username) {
 		AdminDeleteUserRequest deleteUserRequest = new AdminDeleteUserRequest()
@@ -302,7 +315,7 @@ public class IdentityProviderService {
 	}
 	
 	private AuthenticationResultType authenticate(Map<String, String> authParams) {
-		AuthenticationResultType authenticationResultType = null;
+		
 	    AWSCognitoIdentityProvider cognitoClient = getCognitoIdentityClient();
 	 
 	    final InitiateAuthRequest authRequest = new InitiateAuthRequest()
@@ -311,6 +324,8 @@ public class IdentityProviderService {
 	    		.withAuthParameters(authParams);
 	    
 	    InitiateAuthResult authResult = cognitoClient.initiateAuth(authRequest);
+	    
+	    AuthenticationResultType authenticationResultType = null;
 	    
 	    if (StringUtils.isNotBlank(authResult.getChallengeName())) {
 	    	if (NEW_PASSWORD_REQUIRED.equals(authResult.getChallengeName())) {
@@ -336,7 +351,63 @@ public class IdentityProviderService {
 	    return authenticationResultType;
 	}
 	
-	private String generateAccessToken(JwtClaims claims, String audience) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, JoseException, MalformedClaimException {
+	private Token createToken(AuthenticationResultType authenticationResult) throws InvalidJwtException, JoseException, MalformedClaimException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		
+		/**
+		 * parse the access token to get the keyId
+		 */
+		
+		String keyId = getKeyId(authenticationResult.getAccessToken());
+		
+		/**
+		 * parse the access token to get the claims
+		 */
+		
+		JwtClaims claims = getClaims(authenticationResult.getAccessToken());
+		
+		/**
+		 * call the user service to get the saved user
+		 */
+		
+		User user = userService.findById(claims.getSubject());
+		
+		/**
+		 * generate the new accessToken 
+		 */
+		
+		String accessToken = generateAccessToken(claims, keyId, user.getOrganizationId());
+		
+		/**
+		 * build the auth token
+		 */
+		
+		Token token = Token.builder()
+				.id(getId())
+				.accessToken(accessToken)
+				.expiresIn(authenticationResult.getExpiresIn().longValue())
+				.refreshToken(authenticationResult.getRefreshToken())
+				.tokenType(authenticationResult.getTokenType())
+				.build();
+		
+		/**
+		 * fire the token event
+		 */
+		
+		LoggedInEvent event = LoggedInEvent.builder()
+				.audience(user.getOrganizationId())
+				.expiration(Instant.ofEpochMilli(claims.getExpirationTime().getValueInMillis()))
+				.id(claims.getJwtId())
+				.issuedAt(Instant.ofEpochMilli(claims.getIssuedAt().getValueInMillis()))
+				.issuer(claims.getIssuer())
+				.subject(claims.getSubject())
+				.build();
+		
+		loggedInEvent.fireAsync(event);
+		
+		return token;
+	}
+	
+	private String generateAccessToken(JwtClaims claims, String keyId, String audience) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, JoseException, MalformedClaimException {
 		
 		char[] keyStorePassword = KEYSTORE_PASSWORD.toCharArray();
 		
@@ -377,11 +448,17 @@ public class IdentityProviderService {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setPayload(jwtClaims.toJson());
         jws.setKey(privateKey);
-        jws.setKeyIdHeaderValue("NNRVsz2gkKaIt7YJyS0LJc7a1B5RSchnupQkbdgX7mc=");
+        jws.setKeyIdHeaderValue(keyId);
         jws.setHeader("typ", "JWT");
         jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
         
         return jws.getCompactSerialization();
+	}
+	
+	private String getKeyId(String jwt) throws JoseException {
+		JsonWebSignature jws = new JsonWebSignature();
+		jws.setCompactSerialization(jwt);
+		return jws.getKeyIdHeaderValue();
 	}
 	
 	private JwtClaims getClaims(String jwt) throws InvalidJwtException {
@@ -391,7 +468,7 @@ public class IdentityProviderService {
 	            .setRequireSubject()
 	        //    .setExpectedIssuer("Issuer") 
 	        //    .setExpectedAudience("Audience") 
-	            .setVerificationKeyResolver(httpsJwksKeyResolver) 
+	            .setVerificationKeyResolver(jwksKeyResolver) 
 	            .setJwsAlgorithmConstraints(ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA256)
 	            .build(); 
 			
@@ -406,7 +483,7 @@ public class IdentityProviderService {
 	    		.build();
 	}
 
-	private static String generateTemporaryPassword(int length) {
+	private String generateTemporaryPassword(int length) {
 		StringBuilder stringBuilder = new StringBuilder();
 	    for (int i = 0; i < length; i++) {
 	        stringBuilder.append(chars[new Random().nextInt(chars.length)]);

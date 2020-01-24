@@ -8,7 +8,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.json.stream.JsonCollectors;
@@ -61,18 +60,18 @@ public class Subscription extends SObject {
 				.add("startDate", 								startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
 				.add("endDate", 								endDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
 				.add("status", 									getStatus())
-			//	.add("annualRecurringRevenueType",              getAnnualRecurringRevenueType())
+				.add("annualRecurringRevenueType",              getAnnualRecurringRevenueType())
 				.add("annualRecurringRevenue", 					getAnnualRecurringRevenue())
-				.add("revisedSubscription", 					addRevisedSubscription())
+				//.add("revisedSubscription", 					addRevisedSubscription())
 				.add("product", 								addProduct())
 				.add("quoteLine", 								addQuoteLine())
-				.add("revisions", 								revisions == null ? JsonValue.NULL : addRevisions())
+				.add("revisions", 								addRevisions())
 				.build();
 	}
 	
-	private JsonValue addRevisedSubscription() {
-		return revisedSubscription == null ? JsonValue.NULL : revisedSubscription.asJsonObject();
-	}
+//	private JsonValue addRevisedSubscription() {
+//		return revisedSubscription == null ? JsonValue.NULL : revisedSubscription.asJsonObject();
+//	}
 	
 	private JsonValue addProduct() {
 		return product == null ? JsonValue.NULL : product.asJsonObject();
@@ -82,8 +81,8 @@ public class Subscription extends SObject {
 		return quoteLine == null ? JsonValue.NULL : quoteLine.asJsonObject();
 	}
 	
-	private JsonArray addRevisions() {
-		return getRevisions().stream()
+	private JsonValue addRevisions() {
+		return revisions == null ? JsonValue.NULL : revisions.stream()
 				.map(Subscription::asJsonObject)
 				.collect(JsonCollectors.toJsonArray());
 	}
@@ -100,7 +99,9 @@ public class Subscription extends SObject {
 	}
 	
 	private String getAnnualRecurringRevenueType() {
-		if (quoteLine.getUpgradedSubscription() != null) {
+		if (quoteLine == null) {
+			return "N/A"; 
+		} else if (revisedSubscription != null) {
 			return AnnualRecurringRevenueType.INCREMENTAL.name();
 		} else if (quoteLine.getRenewedSubscription() != null) {
 			return AnnualRecurringRevenueType.RENEWAL.name();

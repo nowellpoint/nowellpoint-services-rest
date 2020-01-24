@@ -23,8 +23,12 @@ public class QuoteLine extends SObject {
 				.add("id", getId())
 				.add("createdDate", addCreatedDate())
 				.add("lastModifiedDate", addLastModifiedDate())
-				.add("upgradedSubscription", getUpgradedSubscription() == null ? JsonValue.NULL : getUpgradedSubscription().asJsonObject())
-				.add("renewedSubscription", getRenewedSubscription() == null ? JsonValue.NULL : getRenewedSubscription().asJsonObject())
+				//.add("upgradedSubscription", getUpgradedSubscription() == null ? JsonValue.NULL : getUpgradedSubscription().asJsonObject())
+				.add("renewedSubscription", addRenewedSubscription())
 				.build();
+	}
+	
+	private JsonValue addRenewedSubscription() {
+		return renewedSubscription == null ? JsonValue.NULL : renewedSubscription.asJsonObject();
 	}
 }

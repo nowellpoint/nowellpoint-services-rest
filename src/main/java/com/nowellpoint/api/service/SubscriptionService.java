@@ -32,24 +32,37 @@ public class SubscriptionService extends AbstractService {
 			"SBQQ__CustomerPrice__c, " + 
 			"SBQQ__StartDate__c, " + 
 			"SBQQ__EndDate__c, " + 
-			"SBQQ__RevisedSubscription__c, " + 
+			"SBQQ__RevisedSubscription__r.Id, " + 
+			"SBQQ__RevisedSubscription__r.CurrencyIsoCode, " + 
+			"SBQQ__RevisedSubscription__r.CreatedDate, " + 
+			"SBQQ__RevisedSubscription__r.LastModifiedDate, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.Id, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.ProductCode, " +
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.Family, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.Description, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Quantity__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__ListPrice__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__CustomerPrice__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__StartDate__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__EndDate__c, " + 
 			"SBQQ__QuoteLine__r.Id, " +
 			"SBQQ__QuoteLine__r.CreatedDate, " +
 			"SBQQ__QuoteLine__r.LastModifiedDate, " +
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.Id, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CreatedDate, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.LastModifiedDate, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CurrencyIsoCode, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Id, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.ProductCode, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Family, " +  
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Description, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Quantity__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__ListPrice__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__CustomerPrice__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__StartDate__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__EndDate__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.Id, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CreatedDate, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.LastModifiedDate, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CurrencyIsoCode, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Id, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.ProductCode, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Family, " +  
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Description, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Quantity__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__ListPrice__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__CustomerPrice__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__StartDate__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__EndDate__c, " + 
 			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.Id, " + 
 			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.CreatedDate, " + 
 			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.LastModifiedDate, " + 
@@ -78,48 +91,54 @@ public class SubscriptionService extends AbstractService {
 			"SBQQ__CustomerPrice__c, " + 
 			"SBQQ__StartDate__c, " + 
 			"SBQQ__EndDate__c, " + 
-			"SBQQ__RevisedSubscription__c, " + 
+			"SBQQ__RevisedSubscription__r.Id, " + 
+			"SBQQ__RevisedSubscription__r.CurrencyIsoCode, " + 
+			"SBQQ__RevisedSubscription__r.CreatedDate, " + 
+			"SBQQ__RevisedSubscription__r.LastModifiedDate, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.Id, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.ProductCode, " +
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.Family, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Product__r.Description, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__Quantity__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__ListPrice__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__CustomerPrice__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__StartDate__c, " + 
+			"SBQQ__RevisedSubscription__r.SBQQ__EndDate__c, " + 
 			"SBQQ__QuoteLine__r.Id, " +
 			"SBQQ__QuoteLine__r.CreatedDate, " +
-			"SBQQ__QuoteLine__r.LastModifiedDate, " +
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.Id, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CurrencyIsoCode, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CreatedDate, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.LastModifiedDate, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Id, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.ProductCode, " +
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Family, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Description, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Quantity__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__ListPrice__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__CustomerPrice__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__StartDate__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__EndDate__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.Id, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.CurrencyIsoCode, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.CreatedDate, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.LastModifiedDate, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.Id, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.ProductCode, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.Family, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.Description, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Quantity__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__ListPrice__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__CustomerPrice__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__StartDate__c, " + 
-			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__EndDate__c " + 
+			"SBQQ__QuoteLine__r.LastModifiedDate " +
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.Id, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CurrencyIsoCode, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.CreatedDate, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.LastModifiedDate, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Id, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.ProductCode, " +
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Family, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Product__r.Description, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__Quantity__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__ListPrice__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__CustomerPrice__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__StartDate__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__UpgradedSubscription__r.SBQQ__EndDate__c " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.Id, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.CurrencyIsoCode, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.CreatedDate, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.LastModifiedDate, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.Id, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.ProductCode, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.Family, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.QuantityUnitOfMeasure, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Product__r.Description, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__Quantity__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__ListPrice__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__CustomerPrice__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__StartDate__c, " + 
+//			"SBQQ__QuoteLine__r.SBQQ__RenewedSubscription__r.SBQQ__EndDate__c " + 
 			"From SBQQ__Revisions__r) " + 
 			"From SBQQ__Subscription__c ";
-	
-	/**
-	 * ARR from new customers
-ARR from existing customers who renew
-Incremental increases in ARR from upgrades and add ons
-ARR losses from downgrades or lost customers, or revenue churn
-	 */
-	
+
 	/**
 	 * 
 	 * @param connection

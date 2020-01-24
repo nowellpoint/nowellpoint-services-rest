@@ -4,7 +4,7 @@ public enum AnnualRecurringRevenueType {
 	RENEWAL("Renewal"),
 	NEW("New"),
 	INCREMENTAL("Incremental"),
-	LOST("Lost");
+	CHRUN("Churn");
 	
 	private String annualRecurringRevenueType;
 	

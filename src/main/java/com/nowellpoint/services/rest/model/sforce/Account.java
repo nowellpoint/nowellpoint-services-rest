@@ -6,6 +6,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
+import javax.json.stream.JsonCollectors;
 
 import com.nowellpoint.services.rest.model.sforce.annotation.Column;
 import com.nowellpoint.services.rest.model.sforce.annotation.OneToMany;
@@ -22,31 +23,41 @@ public class Account extends SObject {
 	@Column(value="BillingAddress") private Address billingAddress;
 	@Column(value="ShippingAddress") private Address shippingAddress;
 	@OneToMany(value="AccountTeamMembers") private List<TeamMember> accountTeamMembers;
+	@OneToMany(value="SBQQ__Subscriptions__r") private List<Subscription> subscriptions;
 	
 	@Override
 	public JsonObject asJsonObject() {
 		return Json.createObjectBuilder()
 				.add("id", getId())
 				.add("name", getName())
-				.add("billingAddress", getBillingAddress() == null ? JsonValue.NULL : Json.createObjectBuilder()
-						.add("street", getBillingAddress().getStreet())
-						.add("city", getBillingAddress().getCity())
-						.add("state", getBillingAddress().getState())
-						.add("stateCode", getBillingAddress().getStateCode())
-						.add("postalCode", getBillingAddress().getPostalCode())
-						.add("country", getBillingAddress().getCountry())
-						.add("countryCode", getBillingAddress().getCountryCode())
-						.build())
-				.add("shippingAddress", getShippingAddress() == null ? JsonValue.NULL : Json.createObjectBuilder()
-						.add("street", getShippingAddress().getStreet())
-						.add("city", getShippingAddress().getCity())
-						.add("state", getShippingAddress().getState())
-						.add("stateCode", getShippingAddress().getStateCode())
-						.add("postalCode", getShippingAddress().getPostalCode())
-						.add("country", getShippingAddress().getCountry())
-						.add("countryCode", getShippingAddress().getCountryCode())
-						.build())
+				.add("billingAddress", addBillingAddress())
+				.add("shippingAddress", addShippingAddress())
 				.addAll(addAccountTeamMembers())
+				.add("subscriptions", addSubscriptions())
+				.build();
+	}
+	
+	private JsonValue addBillingAddress() {
+		return billingAddress == null ? JsonValue.NULL : Json.createObjectBuilder()
+				.add("street", billingAddress.getStreet())
+				.add("city", billingAddress.getCity())
+				.add("state", billingAddress.getState())
+				.add("stateCode", billingAddress.getStateCode())
+				.add("postalCode", billingAddress.getPostalCode())
+				.add("country", billingAddress.getCountry())
+				.add("countryCode", billingAddress.getCountryCode())
+				.build();
+	}
+	
+	private JsonValue addShippingAddress() {
+		return shippingAddress == null ? JsonValue.NULL : Json.createObjectBuilder()
+				.add("street", shippingAddress.getStreet())
+				.add("city", shippingAddress.getCity())
+				.add("state", shippingAddress.getState())
+				.add("stateCode", shippingAddress.getStateCode())
+				.add("postalCode", shippingAddress.getPostalCode())
+				.add("country", shippingAddress.getCountry())
+				.add("countryCode", shippingAddress.getCountryCode())
 				.build();
 	}
 	
@@ -65,5 +76,11 @@ public class Account extends SObject {
 				});
 		
 		return teamMembers;
+	}
+	
+	private JsonValue addSubscriptions() {
+		return subscriptions == null ? JsonValue.NULL : subscriptions.stream()
+				.map(Subscription::asJsonObject)
+				.collect(JsonCollectors.toJsonArray());
 	}
 }
