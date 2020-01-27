@@ -39,6 +39,8 @@ public class Subscription extends SObject {
 	@OneToOne(value="SBQQ__QuoteLine__r") private QuoteLine quoteLine;
 	@OneToMany(value="SBQQ__Revisions__r") private List<Subscription> revisions;
 	
+	public final String ACTIVE = "Active";
+	
 	/**
 	 * @return
 	 */
@@ -87,14 +89,14 @@ public class Subscription extends SObject {
 				.collect(JsonCollectors.toJsonArray());
 	}
 	
-	private String getStatus() {
+	public String getStatus() {
 		var today = LocalDate.now();
 		if (today.isBefore(getStartDate())) {
 			return "DRAFT";
 		} else if (today.isAfter(getEndDate())) {
 			return "EXPIRED";
 		} else {
-			return "ACTIVE";
+			return ACTIVE;
 		}
 	}
 	

@@ -7,9 +7,11 @@ import com.nowellpoint.services.rest.model.sforce.annotation.Column;
 import com.nowellpoint.services.rest.model.sforce.annotation.Entity;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper=false)
 @RegisterForReflection
 @Entity("Product2")
 public class Product extends SObject {
@@ -21,11 +23,11 @@ public class Product extends SObject {
 	@Override
 	public JsonObject asJsonObject() {
 		return Json.createObjectBuilder()
-				.add("id", getId())
-				.add("productCode", getProductCode())
-				.add("family", getFamily())
-				.add("description", getDescription())
-				.add("quantityUnitOfMeasure", getQuantityUnitOfMeasure())
+				.add("id", id)
+				.add("productCode", productCode)
+				.add("family", family)
+				.add("description", description)
+				.add("quantityUnitOfMeasure", quantityUnitOfMeasure)
 				.build();
 	}
 }

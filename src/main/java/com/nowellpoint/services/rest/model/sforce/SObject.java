@@ -16,7 +16,7 @@ import lombok.Getter;
 @Getter
 @RegisterForReflection
 abstract class SObject {
-	@Id private String id;
+	@Id protected String id;
 	@Column(value="CreatedDate") private LocalDateTime createdDate;
 	@Column(value="LastModifiedDate") private LocalDateTime lastModifiedDate;
 	@Column(value="CurrencyIsoCode") private String currencyIsoCode;

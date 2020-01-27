@@ -1,6 +1,11 @@
 package com.nowellpoint.services.rest.model.sforce;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -9,8 +14,8 @@ import javax.json.JsonValue;
 import javax.json.stream.JsonCollectors;
 
 import com.nowellpoint.services.rest.model.sforce.annotation.Column;
-import com.nowellpoint.services.rest.model.sforce.annotation.OneToMany;
 import com.nowellpoint.services.rest.model.sforce.annotation.Entity;
+import com.nowellpoint.services.rest.model.sforce.annotation.OneToMany;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
@@ -34,6 +39,7 @@ public class Account extends SObject {
 				.add("shippingAddress", addShippingAddress())
 				.addAll(addAccountTeamMembers())
 				.add("subscriptions", addSubscriptions())
+				.add("totalOwnership", addTotalOwnership())
 				.build();
 	}
 	
@@ -83,4 +89,30 @@ public class Account extends SObject {
 				.map(Subscription::asJsonObject)
 				.collect(JsonCollectors.toJsonArray());
 	}
+	
+	private JsonValue addTotalOwnership() {
+		var sumByFamily = subscriptions.stream()
+				.filter(subscription -> subscription.ACTIVE.equals(subscription.getStatus()))
+		        .collect(Collectors.groupingBy(Subscription::getProduct, 
+		        		Collectors.summingDouble(Subscription::getQuantity)));
+		
+		return sumByFamily.keySet()
+				.stream()
+				.map(product -> { 
+					return Json.createObjectBuilder()
+							.add("id", product.getId())
+							.add("productCode", product.getProductCode())
+							.add("family", product.getFamily())
+							.add("description", product.getDescription())
+							.add("quantityUnitOfMeasure", product.getQuantityUnitOfMeasure())
+							.add("sum", sumByFamily.get(product))
+							.build(); 
+				})
+				.collect(JsonCollectors.toJsonArray());
+	}
+	
+	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 }
