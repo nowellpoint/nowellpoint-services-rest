@@ -65,6 +65,7 @@
 /Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/services/rest/DatabaseConnectionHealthCheck.java
 /Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/api/service/AbstractService.java
 /Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/api/service/SalesforceService.java
+/Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/services/rest/model/sforce/TeamMemberRoles.java
 /Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/services/rest/IdentityResource.java
 /Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/services/rest/error/ConnectionServiceExceptionMapper.java
 /Users/jherson/workspace/nowellpoint-services-rest/src/main/java/com/nowellpoint/services/rest/model/sforce/Organization.java

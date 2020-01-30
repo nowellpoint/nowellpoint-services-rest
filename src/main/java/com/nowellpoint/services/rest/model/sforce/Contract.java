@@ -2,6 +2,7 @@ package com.nowellpoint.services.rest.model.sforce;
 
 import java.time.LocalDate;
 
+import javax.json.Json;
 import javax.json.JsonObject;
 
 import com.nowellpoint.services.rest.model.sforce.annotation.Column;
@@ -21,9 +22,9 @@ public class Contract extends SObject {
 	
 	@Override
 	public JsonObject asJsonObject() {
-		// TODO Auto-generated method stub
-		return null;
+		return Json.createObjectBuilder()
+				.add("id", getId())
+				.add("contractNumber", contractNumber)
+				.build();
 	}
-	
-	
 }

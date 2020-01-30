@@ -29,7 +29,8 @@ public class AccountService extends AbstractService {
 			"(Select Id, " +
 			"CreatedDate, " +
 			"LastModifiedDate, " +
-			"SBQQ__Account__r.Id, " +
+			"SBQQ__Contract__r.Id, " +
+			"SBQQ__Contract__r.ContractNumber, " +
 			"SBQQ__Product__r.Id, " +
 			"SBQQ__Product__r.ProductCode, " +
 			"SBQQ__Product__r.Family, " +

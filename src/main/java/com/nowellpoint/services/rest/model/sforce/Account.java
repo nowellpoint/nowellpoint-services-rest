@@ -1,11 +1,10 @@
 package com.nowellpoint.services.rest.model.sforce;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -33,13 +32,13 @@ public class Account extends SObject {
 	@Override
 	public JsonObject asJsonObject() {
 		return Json.createObjectBuilder()
-				.add("id", getId())
-				.add("name", getName())
+				.add("id", id)
+				.add("name", name)
 				.add("billingAddress", addBillingAddress())
 				.add("shippingAddress", addShippingAddress())
-				.addAll(addAccountTeamMembers())
 				.add("subscriptions", addSubscriptions())
 				.add("totalOwnership", addTotalOwnership())
+				.addAll(addAccountTeamMembers())
 				.build();
 	}
 	
@@ -68,20 +67,36 @@ public class Account extends SObject {
 	}
 	
 	private JsonObjectBuilder addAccountTeamMembers() {
-		var teamMembers = Json.createObjectBuilder()
-				.add("customerSuccessManager", JsonValue.NULL)
-				.add("accountExecutive", JsonValue.NULL);
 		
-		getAccountTeamMembers().stream()
-				.forEach(member -> {
-					if ("Customer Success Manager (CSM)".equals(member.getTeamMemberRole())) {
-						teamMembers.add("customerSuccessManager", member.asJsonObject());
-					} else if ("Account Executive (AE)".equals(member.getTeamMemberRole())) {
-						teamMembers.add("accountExecutive", member.asJsonObject());
-					}
-				});
+		var roles = new TeamMemberRoles();
 		
-		return teamMembers;
+		var customerSuccessManager = Stream.ofNullable(accountTeamMembers)
+				.flatMap(Collection::stream)
+				.filter(member -> roles.getCustomerSuccessManagerRole().equals(member.getTeamMemberRole()))
+				.findFirst();
+		
+		var accountExecutive = Stream.ofNullable(accountTeamMembers)
+				.flatMap(Collection::stream)
+				.filter(member -> roles.getAccountExecutiveRole().equals(member.getTeamMemberRole()))
+				.findFirst();
+		
+		return Json.createObjectBuilder()
+				.add("customerSuccessManager", customerSuccessManager.isPresent() ? customerSuccessManager.get().asJsonObject() : JsonValue.NULL)
+				.add("accountExecutive", accountExecutive.isPresent() ? accountExecutive.get().asJsonObject() : JsonValue.NULL);
+		
+//		var teamMembers = Json.createObjectBuilder()
+//		.add("customerSuccessManager", JsonValue.NULL)
+//		.add("accountExecutive", JsonValue.NULL);		
+		
+//		Stream.ofNullable(accountTeamMembers).flatMap(Collection::stream).forEach(member -> {
+//			if ("Customer Success Manager (CSM)".equals(member.getTeamMemberRole())) {
+//				teamMembers.add("customerSuccessManager", member.asJsonObject());
+//			} else if ("Account Executive (AE)".equals(member.getTeamMemberRole())) {
+//				teamMembers.add("accountExecutive", member.asJsonObject());
+//			}
+//		});
+//		
+//		return teamMembers;
 	}
 	
 	private JsonValue addSubscriptions() {
@@ -91,28 +106,22 @@ public class Account extends SObject {
 	}
 	
 	private JsonValue addTotalOwnership() {
-		var sumByFamily = subscriptions.stream()
+		return Stream.ofNullable(subscriptions)
+				.flatMap(Collection::stream)
 				.filter(subscription -> subscription.ACTIVE.equals(subscription.getStatus()))
-		        .collect(Collectors.groupingBy(Subscription::getProduct, 
-		        		Collectors.summingDouble(Subscription::getQuantity)));
-		
-		return sumByFamily.keySet()
+				.collect(Collectors.groupingBy(Subscription::getProduct, Collectors.summingDouble(Subscription::getQuantity)))
+				.entrySet()
 				.stream()
-				.map(product -> { 
+				.map(entry -> { 
 					return Json.createObjectBuilder()
-							.add("id", product.getId())
-							.add("productCode", product.getProductCode())
-							.add("family", product.getFamily())
-							.add("description", product.getDescription())
-							.add("quantityUnitOfMeasure", product.getQuantityUnitOfMeasure())
-							.add("sum", sumByFamily.get(product))
+							.add("id", entry.getKey().getId())
+							.add("productCode", entry.getKey().getProductCode())
+							.add("family", entry.getKey().getFamily())
+							.add("description", entry.getKey().getDescription())
+							.add("quantityUnitOfMeasure", entry.getKey().getQuantityUnitOfMeasure())
+							.add("quantity", entry.getValue())
 							.build(); 
-				})
+					})
 				.collect(JsonCollectors.toJsonArray());
 	}
-	
-	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
-        Map<Object, Boolean> map = new ConcurrentHashMap<>();
-        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
 }

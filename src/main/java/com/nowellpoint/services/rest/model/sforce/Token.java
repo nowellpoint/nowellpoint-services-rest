@@ -2,9 +2,11 @@ package com.nowellpoint.services.rest.model.sforce;
 
 import javax.json.bind.annotation.JsonbProperty;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
+@RegisterForReflection
 public class Token {
 	@JsonbProperty(value="access_token") private String accessToken;
 	@JsonbProperty(value="refresh_token") private String refreshToken;

@@ -25,6 +25,7 @@ import lombok.Getter;
 @RegisterForReflection
 public class Subscription extends SObject {
 	@OneToOne(value="SBQQ__Account__r") private Account account;
+	@OneToOne(value="SBQQ__Contract__r") private Contract contract;
 	@Column(value="SBQQ__Quantity__c") private Double quantity;
 	@Column(value="SBQQ__ListPrice__c") private Double listPrice;
 	@Column(value="SBQQ__Discount__c") private Double discount;
@@ -65,15 +66,16 @@ public class Subscription extends SObject {
 				.add("annualRecurringRevenueType",              getAnnualRecurringRevenueType())
 				.add("annualRecurringRevenue", 					getAnnualRecurringRevenue())
 				//.add("revisedSubscription", 					addRevisedSubscription())
+				.add("contract",                                addContract())
 				.add("product", 								addProduct())
 				.add("quoteLine", 								addQuoteLine())
 				.add("revisions", 								addRevisions())
 				.build();
 	}
 	
-//	private JsonValue addRevisedSubscription() {
-//		return revisedSubscription == null ? JsonValue.NULL : revisedSubscription.asJsonObject();
-//	}
+	private JsonValue addContract() {
+		return contract == null ? JsonValue.NULL : contract.asJsonObject();
+	}
 	
 	private JsonValue addProduct() {
 		return product == null ? JsonValue.NULL : product.asJsonObject();
