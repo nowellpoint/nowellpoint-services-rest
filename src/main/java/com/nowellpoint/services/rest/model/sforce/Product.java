@@ -12,8 +12,8 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode(callSuper=false)
-@RegisterForReflection
 @Entity("Product2")
+@RegisterForReflection
 public class Product extends SObject {
 	@Column(value="QuantityUnitOfMeasure") private String quantityUnitOfMeasure;
 	@Column(value="ProductCode") private String productCode;

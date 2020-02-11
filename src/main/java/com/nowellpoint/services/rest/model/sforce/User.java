@@ -10,8 +10,8 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
-@RegisterForReflection
 @Entity("User")
+@RegisterForReflection
 public class User extends SObject {
 	@Column(value="Name") private String name;
 	@Column(value="Phone") private String phone;

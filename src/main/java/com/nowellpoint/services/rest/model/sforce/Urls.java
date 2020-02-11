@@ -172,9 +172,11 @@ package com.nowellpoint.services.rest.model.sforce;
 
 import javax.json.bind.annotation.JsonbProperty;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
+@RegisterForReflection
 public class Urls {
 	@JsonbProperty(value="enterprise") private String enterprise;
 	@JsonbProperty(value="metadata") private String metadata;

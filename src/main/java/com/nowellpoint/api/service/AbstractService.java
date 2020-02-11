@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.eclipse.microprofile.config.Config;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -19,8 +18,7 @@ import com.nowellpoint.services.rest.model.sforce.AuthenticationRequest;
 import com.nowellpoint.services.rest.model.sforce.Datastore;
 import com.nowellpoint.services.rest.model.sforce.Salesforce;
 import com.nowellpoint.services.rest.model.sforce.SalesforceServiceException;
-import com.nowellpoint.services.rest.util.ConfigProperties;
-import com.nowellpoint.services.rest.util.SecureValue;
+import com.nowellpoint.services.rest.util.AWSConfiguration;
 
 public class AbstractService {
 	
@@ -34,25 +32,27 @@ public class AbstractService {
 	protected Event<ConnectionResult> connectionEvent;
 	
 	@Inject
-	protected Config config;
+	protected AWSConfiguration awsConfiguration;
+	
+	@Inject
+	protected CryptographyService cryptographyService;
 	
 	protected MongoDatabase getDatabase() {    	
         return mongoClient.getDatabase("nowellpoint").withCodecRegistry(codecRegistry);
     }
 	
 	protected Datastore createDatastore(Connection connection) {
-		String secretKey = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
-		System.out.println(connection.getConnectionString());
-		String connectionString = SecureValue.decryptBase64(secretKey, connection.getConnectionString());
+
+		var connectionString = cryptographyService.decryptBase64(connection.getConnectionString());
 		
-		String[] params = connectionString.split(" ", 4);
+		var params = connectionString.split(" ", 4);
 		
-		String username = params[0];
-		String password = params[1];
-		String clientId = params[2];
-		String clientSecret = params[3];
+		var username = params[0];
+		var password = params[1];
+		var clientId = params[2];
+		var clientSecret = params[3];
 		
-		AuthenticationRequest authenticationRequest = AuthenticationRequest.builder()
+		var authenticationRequest = AuthenticationRequest.builder()
 				.authEndpoint(connection.getAuthEndpoint())
 				.clientId(clientId)
 				.clientSecret(clientSecret)
@@ -65,7 +65,7 @@ public class AbstractService {
 	}
 	
 	protected Datastore createDatastore(AuthenticationRequest authenticationRequest) {
-		Datastore datastore = Salesforce.createDatastore(authenticationRequest);
+		var datastore = Salesforce.createDatastore(authenticationRequest);
 		
 		ConnectionResult connectionResult = null;
 		

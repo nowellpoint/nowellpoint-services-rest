@@ -1,12 +1,12 @@
 package com.nowellpoint.services.rest.util;
 
-import java.security.MessageDigest;
-import java.util.Arrays;
-import java.util.Base64;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -19,11 +19,12 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecureValue {
 	
 	public static String encryptBase64(String key, String value) {
-		return Base64.getEncoder().encodeToString( encrypt( key, value.getBytes() ) );
+		return Base64.getEncoder().encodeToString( encrypt( key, value.getBytes( StandardCharsets.UTF_8 ) ) );
 	}
 	
 	public static String decryptBase64(String key, String base64EncodedString) {
-		return new String( decrypt( key, Base64.getDecoder().decode( base64EncodedString ) ) );
+		System.out.println(base64EncodedString);
+		return new String( decrypt( key, Base64.getDecoder().decode( base64EncodedString ) ), StandardCharsets.UTF_8 );
 	}
 
 	public static byte[] encrypt(String key, byte[] value) {	
@@ -36,7 +37,7 @@ public class SecureValue {
 	
 	private static byte[] doFinal(String keyString, int cipherMode, byte[] bytes) {
 		try {
-			byte[] key = keyString.getBytes("UTF-8");
+			byte[] key = keyString.getBytes( StandardCharsets.UTF_8 );
 			
 			MessageDigest sha = MessageDigest.getInstance("SHA-512");
 			key = sha.digest(key);
@@ -51,7 +52,7 @@ public class SecureValue {
 			cipher.init(cipherMode, secretKey, spec);
 			
 			return cipher.doFinal(bytes);
-		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 			return null;
 		}

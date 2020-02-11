@@ -1,8 +1,10 @@
 package com.nowellpoint.services.rest.model.sforce;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
+@RegisterForReflection
 public class SalesforceServiceException extends RuntimeException {
 	
 	private static final long serialVersionUID = 2726007023971974319L;

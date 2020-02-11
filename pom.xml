@@ -37,7 +37,7 @@
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
     <quarkus.version>1.2.0.Final</quarkus.version>
     <lombok.version>1.18.10</lombok.version>
-    <version.aws.sdk>1.11.700</version.aws.sdk>
+    <version.aws.sdk>1.11.714</version.aws.sdk>
     <version.sendgrid>4.4.1</version.sendgrid>
   </properties>
   <dependencyManagement>
@@ -103,6 +103,11 @@
       <artifactId>aws-java-sdk-cognitoidp</artifactId>
       <version>${version.aws.sdk}</version>
     </dependency>
+    <dependency>
+    	<groupId>com.amazonaws</groupId>
+		<artifactId>aws-java-sdk-kms</artifactId>
+		<version>${version.aws.sdk}</version>
+	</dependency>
     <dependency>
       <groupId>com.sendgrid</groupId>
       <artifactId>sendgrid-java</artifactId>

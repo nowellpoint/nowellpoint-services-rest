@@ -12,8 +12,8 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
-@RegisterForReflection
 @Entity("Contract")
+@RegisterForReflection
 public class Contract extends SObject {
 	@Column(value="ContractNumber") private String contractNumber;
 	@Column(value="Status") private String status;

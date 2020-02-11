@@ -10,7 +10,6 @@ import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 
 import org.bson.Document;
-import org.eclipse.microprofile.config.Config;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
@@ -22,14 +21,16 @@ import com.nowellpoint.services.rest.model.ConnectionServiceException;
 import com.nowellpoint.services.rest.model.Organization;
 import com.nowellpoint.services.rest.model.OrganizationRequest;
 import com.nowellpoint.services.rest.model.Subscription;
-import com.nowellpoint.services.rest.util.ConfigProperties;
-import com.nowellpoint.services.rest.util.SecureValue;
+import com.nowellpoint.services.rest.util.AWSConfiguration;
 
 @RequestScoped
 public class OrganizationService extends AbstractService {
 	
 	@Inject
-	Config config;
+	AWSConfiguration configuration;
+	
+	@Inject
+	CryptographyService cryptogrophyService;
 	
 	@Inject
 	SalesforceService salesforceService;
@@ -192,8 +193,7 @@ public class OrganizationService extends AbstractService {
 	}
 	
 	private String encryptConnectionString(ConnectionRequest connectionRequest) {
-		var secretKey = config.getValue(ConfigProperties.AWS_SECRET_ACCESS_KEY, String.class);
-		return SecureValue.encryptBase64(secretKey, new StringBuilder().append(connectionRequest.getUsername())
+		return cryptogrophyService.encryptBase64(new StringBuilder().append(connectionRequest.getUsername())
 				.append(" ")
 				.append(connectionRequest.getPassword())
 				.append(" ")

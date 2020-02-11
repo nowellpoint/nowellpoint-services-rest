@@ -2,9 +2,11 @@ package com.nowellpoint.services.rest.model.sforce;
 
 import javax.json.bind.annotation.JsonbProperty;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Getter;
 
 @Getter
+@RegisterForReflection
 public class Identity {
 	@JsonbProperty(value="id") private String id;
 	@JsonbProperty(value="asserted_user") private Boolean assertedUser;
